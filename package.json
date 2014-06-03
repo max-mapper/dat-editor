@@ -1,0 +1,22 @@
+{
+  "name": "dat-editor",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "beefy app.js -- -t brfs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "brfs": "^1.1.1",
+    "domify": "^1.2.2",
+    "domquery": "^1.0.2",
+    "mustache": "^0.8.1",
+    "xhr": "^1.7.0"
+  },
+  "devDependencies": {
+    "beefy": "^1.1.0",
+    "browserify": "^4.1.8"
+  }
+}

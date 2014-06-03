@@ -1,0 +1,42 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+  <meta charset="utf-8"> 
+  <title>Dat Editor</title>
+  <link rel="stylesheet" href="style/reset.css" media="screen">
+  <link rel="stylesheet" href="style/data-table.css" media="screen"> 
+  <link rel="stylesheet" href="style/style.css" media="screen">
+</head> 
+<body class="bod">
+  <div class="container">
+    <div class="menu-overlay" style="display: none; z-index: 101; ">&nbsp;</div>
+    <ul class="menu">
+    </ul>
+    <div id="header">
+      <a href="http://dat-data.com"><img id="datLogo" src="images/dat.png"/></a>
+      <div class="project-title"></div>
+      <div class="project-actions"></div>
+      <div class="project-controls"></div>
+    </div>
+    <div class="main_content">
+      <div class="left-panel"></div>
+      <div class="right-panel"></div>
+    </div>
+  </div>
+  
+  <div id="notification-container">
+    <div id="notification">
+      <img src="images/small-spinner.gif" class="notification-loader"><span id="notification-message">Loading...</span>
+    </div>
+  </div>
+    
+  <div class="dialog-overlay" style="display: none; z-index: 101; ">&nbsp;</div>
+  <div class="dialog ui-draggable" style="display: none; z-index: 102; top: 101px; ">
+    <div class="dialog-frame" style="width: 700px; visibility: visible; ">
+      <div class="dialog-content dialog-border"></div>
+    </div>
+  </div>
+  
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

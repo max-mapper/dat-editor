@@ -1,0 +1,32 @@
+<div class="dialog-header">
+  Download and import from a URL or API
+</div>
+<div class="dialog-body">
+  <div class="grid-layout layout-full">
+    <p class="info">
+      Currently only <a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a>-enabled APIs are supported, for example:
+    </p>
+    <p class="info">
+      <code>https://api.github.com/repos/maxogden/recline/commits</code>
+    </p>
+    <form name="api-import-form" id="sign-in-form">
+      <table class="form-table">
+        <tbody>
+          <tr>
+            <th>
+              <label for="url">URL</label>
+            </th>
+            <td>
+              <input type="text" size="65" id="url-input" name="url">
+            </td>
+          </tr>
+          <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px; display: none;" hidefocus="true" />
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>
+<div class="dialog-footer">
+  <button class="okButton button">&nbsp;&nbsp;Fetch&nbsp;&nbsp;</button>
+  <button class="cancelButton button">Cancel</button>
+</div>
