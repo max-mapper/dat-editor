@@ -1,3 +1,12 @@
+.column-header-menu { display: none !important; }
+.column-header-name { margin: 0 0 0 3px !important; }
+
+.right-panel { background: #d4eac8 !important; }
+.data-table-container { border-top: 1px solid #d4eac8 !important;}
+
+.viewpanel-header, .viewpanel-pagesize { background: #e3f4da !important; }
+
+
 section { margin-bottom: 20px; padding: 10px; }
 section.even { background-color: #EEE; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 article.example { margin: 20px 0px 20px 0px; padding: 10px 0px 10px 0px; border-top: 1px dotted #CCCCCC; border-bottom: 1px dotted #CCCCCC; }
