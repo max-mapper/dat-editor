@@ -39,7 +39,7 @@ var actions = {
   bulkEdit: function() { showDialog('bulkEdit', {name: 'COLUMN'}) },
   transform: function() { showDialog('transform') },
   csv: function() { window.location.href = remote + '/api/csv' },
-  json: function() { window.location.href = remote + "/api/json" },
+  json: function() { window.location.href = remote + "/api/json?limit=-1" },
   urlImport: function() { showDialog('urlImport') },
   pasteImport: function() { showDialog('pasteImport') },
   uploadImport: function() { showDialog('uploadImport') },
@@ -82,6 +82,11 @@ on(document.body, '.dialog-overlay', 'click', function(e) {
   dialogOverlay.hide()
 })
 
+on(document.body, '.cancelButton', 'click', function(e) {
+  dialog.hide()
+  dialogOverlay.hide()
+})
+
 on(document.body, '.menu li', 'click', function(e) {
   var action = dom(e.target).attr('data-action')
   var actionFunc = actions[action]
@@ -90,8 +95,8 @@ on(document.body, '.menu li', 'click', function(e) {
 
 function showDialog(template, data) {
   if (!data) data = {};
-  dom('.dialog').show()
-  dom('.dialog-overlay').show()
+  dialog.show()
+  dialogOverlay.show()
   render(template, '.dialog-content', data)
   // util.observeExit($('.dialog-content'), function() {
   //   util.hide('dialog');
