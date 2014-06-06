@@ -2,7 +2,10 @@ var xhr = require('xhr')
 var fs = require('fs')
 var mustache = require('mustache').render
 var dom = require('domquery')
+var offset = require('offset')
 var qs = require('querystring')
+var on = require('component-delegate').bind
+var parents = require('closest')
 
 var remote = 'http://localhost:6461'
 var state = {
@@ -10,14 +13,36 @@ var state = {
 }
 
 window.dom = dom // for debugging
+window.offset = offset
+window.parents = parents
 
 var templates = {
   title: fs.readFileSync('./templates/title.html').toString(),
   generating: fs.readFileSync('./templates/generating.html').toString(),
   tableContainer: fs.readFileSync('./templates/tableContainer.html').toString(),
-  actions: fs.readFileSync('./templates/actions.html').toString(),
   dataTable: fs.readFileSync('./templates/dataTable.html').toString(),
-  metadata: fs.readFileSync('./templates/metadata.html').toString()
+  metadata: fs.readFileSync('./templates/metadata.html').toString(),
+  actions: fs.readFileSync('./templates/actions.html').toString(),
+  rowActions: fs.readFileSync('./templates/rowActions.html').toString(),
+  columnActions: fs.readFileSync('./templates/columnActions.html').toString(),
+  importActions: fs.readFileSync('./templates/importActions.html').toString(),
+  exportActions: fs.readFileSync('./templates/exportActions.html').toString(),
+  transformActions: fs.readFileSync('./templates/transformActions.html').toString(),
+  urlImport: fs.readFileSync('./templates/urlImport.html').toString(),
+  pasteImport: fs.readFileSync('./templates/pasteImport.html').toString(),
+  uploadImport: fs.readFileSync('./templates/uploadImport.html').toString(),
+  transform: fs.readFileSync('./templates/transform.html').toString(),
+  bulkEdit: fs.readFileSync('./templates/bulkEdit.html').toString()
+}
+
+var actions = {
+  bulkEdit: function() { showDialog('bulkEdit', {name: 'COLUMN'}) },
+  transform: function() { showDialog('transform') },
+  csv: function() { window.location.href = remote + '/api/csv' },
+  json: function() { window.location.href = remote + "/api/json" },
+  urlImport: function() { showDialog('urlImport') },
+  pasteImport: function() { showDialog('pasteImport') },
+  uploadImport: function() { showDialog('uploadImport') },
 }
 
 fetchMetadata(function(err, metadata) {
@@ -28,9 +53,52 @@ fetchMetadata(function(err, metadata) {
 
 render('title', '.project-title', {db_name: 'Dat Database'})
 render('tableContainer', '.right-panel')
-activateControls()
 // render('generating', '.project-actions')
-// render('actions', '.project-actions', {db_name: 'Dat Database'} )
+render('actions', '.project-actions', {db_name: 'Dat Database'} )
+
+activateControls()
+
+var menu = dom('.menu')
+var menuOverlay = dom('.menu-overlay')
+var dialog = dom('.dialog')
+var dialogOverlay = dom('.dialog-overlay')
+
+on(document.body, '.project-actions .button', 'click', function(e) {
+  var el = e.target
+  if (!dom(el).hasClass('button')) el = parents(el, '.button')
+  var action = dom(el).attr('data-action')
+  render(action + 'Actions', '.menu')
+  position(menu, el, {left: -60, top: 0})
+  menuOverlay.show()
+})
+
+on(document.body, '.menu-overlay', 'click', function(e) {
+  menu.hide()
+  menuOverlay.hide()
+})
+
+on(document.body, '.dialog-overlay', 'click', function(e) {
+  dialog.hide()
+  dialogOverlay.hide()
+})
+
+on(document.body, '.menu li', 'click', function(e) {
+  var action = dom(e.target).attr('data-action')
+  var actionFunc = actions[action]
+  if (actionFunc) actionFunc()
+})
+
+function showDialog(template, data) {
+  if (!data) data = {};
+  dom('.dialog').show()
+  dom('.dialog-overlay').show()
+  render(template, '.dialog-content', data)
+  // util.observeExit($('.dialog-content'), function() {
+  //   util.hide('dialog');
+  // })
+  // $('.dialog').draggable({ handle: '.dialog-header', cursor: 'move' });
+}
+
 
 function fetchMetadata(cb) {
   xhr({ uri: remote + '/api', json: true }, function (err, resp, data) {
@@ -153,4 +221,19 @@ function getPageSize() {
   } else {
     return 10;
   }
+}
+
+function position(thing, elem, adjust) {
+  var position = offset(elem)
+  if (!adjust) adjust = {top: 0, left: 0}
+  var top = (position.top + elem.offsetHeight) + (adjust.top || 0)
+  var left = position.left + (adjust.left || 0)
+  var styles = { top: top + 'px', left: left + 'px' }
+  thing
+    .show()
+    .style(styles)
+    .on('click', function(e) {
+      thing.hide()
+      menuOverlay.hide()
+    })
 }

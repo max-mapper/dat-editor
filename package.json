@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "brfs": "^1.1.1",
+    "closest": "0.0.1",
+    "component-delegate": "^0.2.2",
     "domify": "^1.2.2",
     "domquery": "^1.0.2",
     "mustache": "^0.8.1",
+    "offset": "0.0.1",
     "xhr": "^1.7.0"
   },
   "devDependencies": {
