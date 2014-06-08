@@ -8,6 +8,8 @@ var on = require('component-delegate').bind
 var parents = require('closest')
 var siblings = require('siblings')
 
+function noop() {}
+
 var remote = 'http://localhost:6461'
 var state = {
   offset: 0
@@ -98,7 +100,7 @@ on(document.body, '.menu li', 'click', function(e) {
 
 on(document.body, '.data-table-cell-edit', 'click', function(e) {
   var editContainer = dom('.data-table-cell-editor')
-  if (editContainer.length > 0) cancelCellEdit(editContainer[0])
+  if (editContainer.length > 0) closeCellEdit(editContainer[0])
   dom(e.target).addClass("hidden")
   var cell = dom(siblings(e.target, '.data-table-cell-value')[0])
   render('cellEditor', cell, {value: cell.text()})
@@ -106,17 +108,26 @@ on(document.body, '.data-table-cell-edit', 'click', function(e) {
 
 on(document.body, '.data-table-cell-editor-action .cancelButton', 'click', function(e) {
   var editContainer = dom('.data-table-cell-editor')
-  if (editContainer.length > 0) cancelCellEdit(editContainer[0])
+  if (editContainer.length > 0) closeCellEdit(editContainer[0])
 })
 
 on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
   var editContainer = parents(e.target, '.data-table-cell-editor')
   var editor = dom(editContainer).select('.data-table-cell-editor-editor')
   var updated = editor.val()
-  console.log(updated)
+  var tr = parents(editContainer, 'tr')
+  var td = parents(editContainer, 'td')
+  var key = dom(tr).attr('data-key')
+  var column = dom(td).attr('data-header')
+  var row = state.rows[key]
+  row[column] = updated
+  closeCellEdit(editContainer)
+  post(row, function(err) {
+    if (err) notify(err.message)
+  })
 })
 
-function cancelCellEdit(editContainer) {
+function closeCellEdit(editContainer) {
   var editor = dom(editContainer).select('.data-table-cell-editor-editor')
   var cellValue = editContainer.parentNode
   var cell = cellValue.parentNode
@@ -131,6 +142,19 @@ function showDialog(template, data) {
   render(template, '.dialog-content', data)
 }
 
+function post(row, cb) {
+  if (!cb) cb = noop
+  notify('Updating row...')
+  xhr({ uri: remote + '/api/' + row.key, method: 'POST', json: row }, function (err, resp, data) {
+    if (err) return cb(err)
+    fetchAndRenderRows(function(err) {
+      if (err) return cb(err)
+      notify('Updated row ' + row.key + ' to version ' + data.version)
+      cb(null, data)
+    })
+  })
+}
+
 function fetchMetadata(cb) {
   xhr({ uri: remote + '/api', json: true }, function (err, resp, data) {
     if (data) state.dbInfo = data
@@ -138,11 +162,18 @@ function fetchMetadata(cb) {
   })
 }
 
-function fetchAndRenderRows(opts) {
+function fetchAndRenderRows(opts, cb) {
+  if (typeof opts === 'function') {
+    cb = opts
+    opts = undefined
+  }
+  
   if (!opts) {
     state.offset = 0
     opts = {}
   }
+  
+  if (!cb) cb = noop
   
   var query = {
     start: opts.start,
@@ -156,8 +187,14 @@ function fetchAndRenderRows(opts) {
   var uri = remote + '/api/json?' + qs.stringify(query)
   
   xhr({ uri: uri, json: true }, function (err, resp, data) {
-    if (err) return console.error(err)
+    if (err) return cb(err)
+    if (data.rows.length > 0) {
+      var rows = {}
+      data.rows.map(function(r) { rows[r.key] = r })
+      state.rows = rows
+    }
     renderTable(data.rows)
+    cb(null)
   })
 }
 
@@ -267,4 +304,14 @@ function position(thing, elem, adjust) {
       thing.hide()
       menuOverlay.hide()
     })
+}
+
+function notify( message, options ) {
+  if (!options) var options = {};
+  dom('#notification-container').show()
+  dom('#notification-message').text(message)
+  if (!options.loader) dom('.notification-loader').hide()
+  if (options.loader) dom('.notification-loader').show()
+  if (state.notifyTimeout) clearTimeout(state.notifyTimeout)
+  if (!options.persist) state.notifyTimeout = setTimeout(function() { dom('#notification-container').hide() }, 3000)
 }

@@ -47,7 +47,7 @@ function rows(keys, data) {
 
 function row(keys, data, rowNum) {
   return h('tr.table-row',
-    {'data-id': rowNum},
+    {'data-key': rowNum},
     keys.map(function (k, i) {
       return cell(k, data[k].toString())
     })
