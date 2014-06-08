@@ -109,6 +109,13 @@ on(document.body, '.data-table-cell-editor-action .cancelButton', 'click', funct
   if (editContainer.length > 0) cancelCellEdit(editContainer[0])
 })
 
+on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
+  var editContainer = parents(e.target, '.data-table-cell-editor')
+  var editor = dom(editContainer).select('.data-table-cell-editor-editor')
+  var updated = editor.val()
+  console.log(updated)
+})
+
 function cancelCellEdit(editContainer) {
   var editor = dom(editContainer).select('.data-table-cell-editor-editor')
   var cellValue = editContainer.parentNode
