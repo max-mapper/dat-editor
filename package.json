@@ -16,6 +16,7 @@
     "domquery": "^1.0.2",
     "mustache": "^0.8.1",
     "offset": "0.0.1",
+    "siblings": "^1.0.1",
     "xhr": "^1.7.0"
   },
   "devDependencies": {

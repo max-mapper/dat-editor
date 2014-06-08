@@ -6,6 +6,7 @@ var offset = require('offset')
 var qs = require('querystring')
 var on = require('component-delegate').bind
 var parents = require('closest')
+var siblings = require('siblings')
 
 var remote = 'http://localhost:6461'
 var state = {
@@ -15,6 +16,7 @@ var state = {
 window.dom = dom // for debugging
 window.offset = offset
 window.parents = parents
+window.siblings = siblings
 
 var templates = {
   title: fs.readFileSync('./templates/title.html').toString(),
@@ -32,7 +34,8 @@ var templates = {
   pasteImport: fs.readFileSync('./templates/pasteImport.html').toString(),
   uploadImport: fs.readFileSync('./templates/uploadImport.html').toString(),
   transform: fs.readFileSync('./templates/transform.html').toString(),
-  bulkEdit: fs.readFileSync('./templates/bulkEdit.html').toString()
+  bulkEdit: fs.readFileSync('./templates/bulkEdit.html').toString(),
+  cellEditor: fs.readFileSync('./templates/cellEditor.html').toString()
 }
 
 var actions = {
@@ -93,17 +96,33 @@ on(document.body, '.menu li', 'click', function(e) {
   if (actionFunc) actionFunc()
 })
 
+on(document.body, '.data-table-cell-edit', 'click', function(e) {
+  var editContainer = dom('.data-table-cell-editor')
+  if (editContainer.length > 0) cancelCellEdit(editContainer[0])
+  dom(e.target).addClass("hidden")
+  var cell = dom(siblings(e.target, '.data-table-cell-value')[0])
+  render('cellEditor', cell, {value: cell.text()})
+})
+
+on(document.body, '.data-table-cell-editor-action .cancelButton', 'click', function(e) {
+  var editContainer = dom('.data-table-cell-editor')
+  if (editContainer.length > 0) cancelCellEdit(editContainer[0])
+})
+
+function cancelCellEdit(editContainer) {
+  var editor = dom(editContainer).select('.data-table-cell-editor-editor')
+  var cellValue = editContainer.parentNode
+  var cell = cellValue.parentNode
+  dom(cellValue).html(editor.text())
+  dom(cell).select('.data-table-cell-edit').removeClass('hidden')
+}
+
 function showDialog(template, data) {
   if (!data) data = {};
   dialog.show()
   dialogOverlay.show()
   render(template, '.dialog-content', data)
-  // util.observeExit($('.dialog-content'), function() {
-  //   util.hide('dialog');
-  // })
-  // $('.dialog').draggable({ handle: '.dialog-header', cursor: 'move' });
 }
-
 
 function fetchMetadata(cb) {
   xhr({ uri: remote + '/api', json: true }, function (err, resp, data) {
@@ -136,7 +155,7 @@ function fetchAndRenderRows(opts) {
 }
 
 function render(template, target, data) {
-  target = dom(target)
+  if (typeof target === 'string') target = dom(target)
   var compiled = mustache(templates[template], data)
   target.html(compiled)
 }
