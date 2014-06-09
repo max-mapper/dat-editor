@@ -826,7 +826,6 @@ a.data-table-flag-off {
 }
 
 .data-table-cell-copypaste-editor {
-  overflow: hidden;
   display: block;
   width: 98%;
   height: 10em;

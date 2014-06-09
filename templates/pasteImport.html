@@ -1,20 +1,22 @@
-<div class="dialog-header">
-  Import raw copy & pasted JSON
-</div>
-<div class="dialog-body">
-  <div class="grid-layout layout-tight layout-full">
-    <p class="info">
-      Paste in an array of JSON objects representing the documents that you would like to insert into the database.
-    </p>
-    <p class="info">
-      <code>[{"woo": "pizza"}, {"tasty": "muffins"}]</code>
-    </p>
-    <div class="menu-container data-table-cell-editor">
-      <textarea class="data-table-cell-copypaste-editor" bind="textarea">{{value}}</textarea>
+<div class="json-paste-import">
+  <div class="dialog-header">
+    Import raw copy & pasted JSON
+  </div>
+  <div class="dialog-body">
+    <div class="grid-layout layout-tight layout-full">
+      <p class="info">
+        Paste in JSON objects (one per line) representing the rows that you would like to insert into dat.
+      </p>
+      <p class="info">
+        <code>{"key": "pizza", "tasty": true}<br>{"key": "tacos", "tastiest": true}</code>
+      </p>
+      <div class="menu-container data-table-cell-editor">
+        <textarea class="data-table-cell-copypaste-editor" bind="textarea">{{value}}</textarea>
+      </div>
     </div>
   </div>
-</div>
-<div class="dialog-footer">
-  <button class="okButton button">&nbsp;&nbsp;Import&nbsp;&nbsp;</button>
-  <button class="cancelButton button">Cancel</button>
+  <div class="dialog-footer">
+    <button class="okButton button">&nbsp;&nbsp;Import&nbsp;&nbsp;</button>
+    <button class="cancelButton button">Cancel</button>
+  </div>
 </div>

@@ -111,6 +111,38 @@ on(document.body, '.data-table-cell-editor-action .cancelButton', 'click', funct
   if (editContainer.length > 0) closeCellEdit(editContainer[0])
 })
 
+on(document.body, '.json-paste-import .okButton', 'click', function(e) {
+  var container = parents(e.target, '.json-paste-import')
+  var textarea = dom(container).select('.data-table-cell-copypaste-editor')
+  var input = textarea.val()
+  if (input.length === 0) return notify('No JSON in input!')
+  
+  try {
+    var rows = input.split(/\r?\n/)
+    var objects = []
+    rows.map(function(r) { if (r.length > 0) objects.push(JSON.parse(r)) })
+  } catch(e) {
+    return notify('Could not parse newline separated JSON --- Invalid JSON')
+  }
+  
+  notify('Uploading data...')
+  
+  xhr({uri: remote + '/api/bulk?results=true', method: "POST", body: input, headers: {"content-type": "application/json"}}, function(err, resp, body) {
+    var lines = body.split(/\r?\n/)
+    var success = []
+    var conflicts = []
+    lines.map(function(r) {
+      if (r.length === 0) return
+      var row = JSON.parse(r)
+      if (row.conflict) conflicts.push(row)
+      else success.push(row)
+    })
+    notify("New/updated: " + success.length + ' rows, conflicts: ' + conflicts.length + ' rows')
+  })
+  dialog.hide()
+  dialogOverlay.hide()
+})
+
 on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
   var editContainer = parents(e.target, '.data-table-cell-editor')
   var editor = dom(editContainer).select('.data-table-cell-editor-editor')
@@ -149,7 +181,7 @@ function post(row, cb) {
     if (err) return cb(err)
     fetchAndRenderRows(function(err) {
       if (err) return cb(err)
-      notify('Updated row ' + row.key + ' to version ' + data.version)
+      notify('Updated row ' + data.key + ' to version ' + data.version)
       cb(null, data)
     })
   })
