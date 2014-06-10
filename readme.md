@@ -1,7 +1,10 @@
-work in progress
+# dat-editor
+
+a front-end application for managing data in dat
+
+## get it running
 
 ```
-dat listen
 npm install
 npm start
 ```

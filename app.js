@@ -1,3 +1,7 @@
 var createEditor = require('./')
 
-createEditor()
+var opts = {
+  remote: process.env['DATURL']
+}
+
+createEditor(opts)

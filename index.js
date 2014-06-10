@@ -1,5 +1,6 @@
 var xhr = require('xhr')
 var fs = require('fs')
+var url = require('url')
 var mustache = require('mustache').render
 var dom = require('domquery')
 var offset = require('offset')
@@ -43,7 +44,14 @@ module.exports = function(opts) {
     offset: 0
   }
   
-  state.remote = opts.remote || 'http://localhost:6461'
+  state.remote = opts.remote
+  
+  if (!state.remote) {
+    var parsed = url.parse(window.location.href, true)
+    if (parsed.query) state.remote = parsed.query.remote
+  }
+  
+  if (!state.remote) state.remote = window.location.origin
   
   var actions = {
     bulkEdit: function() { showDialog('bulkEdit', {name: 'COLUMN'}) },

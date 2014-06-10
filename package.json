@@ -1,11 +1,11 @@
 {
   "name": "dat-editor",
-  "version": "0.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "work in progress",
   "main": "index.js",
   "scripts": {
     "start": "beefy app.js",
-    "build": "packify index.html > app.html"
+    "build": "packify index.html > prebuilt.html"
   },
   "author": "",
   "license": "ISC",
@@ -26,5 +26,17 @@
     "browserify": "^4.1.8",
     "packify": "^1.1.1"
   },
-  "browserify": { "transform": [ "brfs" ] }
+  "browserify": {
+    "transform": [
+      "brfs"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxogden/dat-editor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maxogden/dat-editor/issues"
+  },
+  "homepage": "https://github.com/maxogden/dat-editor"
 }
