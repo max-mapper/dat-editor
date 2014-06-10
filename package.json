@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "beefy app.js -- -t brfs"
+    "start": "beefy app.js",
+    "build": "packify index.html > app.html"
   },
   "author": "",
   "license": "ISC",
@@ -21,7 +22,9 @@
   },
   "devDependencies": {
     "beefy": "^1.1.0",
+    "brfs": "^1.1.1",
     "browserify": "^4.1.8",
     "packify": "^1.1.1"
-  }
+  },
+  "browserify": { "transform": [ "brfs" ] }
 }
