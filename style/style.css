@@ -5,7 +5,7 @@
 .data-table-container { border-top: 1px solid #d4eac8 !important;}
 
 .viewpanel-header, .viewpanel-pagesize { background: #e3f4da !important; }
-
+.error { text-align: center; margin: 50px; font-size: 20px; }
 
 section { margin-bottom: 20px; padding: 10px; }
 section.even { background-color: #EEE; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
@@ -41,7 +41,7 @@ blockquote,
 #database .database_oneline .message a{color:black;}
 #database .database_oneline .database,#database .database_oneline .tree{width:1%;font-family:Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;font-size:90%;color:#808080;border-left:1px solid #bedce7;padding:.6em .5em;}
 #database .database_oneline .tree{border-right:1px solid #bedce7;}
-a{color:#4183c4;}
+a{color:#229e3e;}
 a {text-decoration: none;}
 a:hover{text-decoration:underline;}
 .usingMouse a{outline:none;}
