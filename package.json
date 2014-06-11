@@ -7,8 +7,8 @@
     "start": "beefy app.js",
     "build": "packify index.html > prebuilt.html"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "max ogden",
+  "license": "BSD",
   "dependencies": {
     "brfs": "^1.1.1",
     "closest": "0.0.1",
@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "beefy": "^1.1.0",
-    "brfs": "^1.1.1",
     "browserify": "^4.1.8",
     "packify": "^1.1.1"
   },
