@@ -10,6 +10,7 @@
   "author": "max ogden",
   "license": "BSD",
   "dependencies": {
+    "add-commas": "0.0.1",
     "brfs": "^1.1.1",
     "closest": "0.0.1",
     "component-delegate": "^0.2.2",

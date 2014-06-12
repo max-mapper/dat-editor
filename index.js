@@ -8,6 +8,7 @@ var qs = require('querystring')
 var on = require('component-delegate').bind
 var parents = require('closest')
 var siblings = require('siblings')
+var addCommas = require('add-commas')
 
 function noop() {}
 
@@ -65,11 +66,7 @@ module.exports = function(opts) {
     uploadImport: function() { showDialog('uploadImport') },
   }
 
-  fetchMetadata(function(err, metadata) {
-    if (err) return console.error(err)
-    render('metadata', '#metadata', metadata)
-    fetchAndRenderRows()
-  })
+  refreshTable()
 
   render('title', '.project-title', {db_name: 'Dat Database'})
   render('tableContainer', '.right-panel')
@@ -90,8 +87,10 @@ module.exports = function(opts) {
     xhr({ uri: state.remote + '/api/session', json: true, cors: true }, function (err, resp, json) {
       if ( json.loggedOut ) {
         var text = "Sign in"
-      } else {
+      } else if (json.session) {
         var text = "Sign out"
+      } else {
+        return
       }
       render('controls', '.project-controls', {text: text});
     })
@@ -197,15 +196,18 @@ module.exports = function(opts) {
       xhr({uri: state.remote + '/api/bulk?results=true', method: "POST", body: input, cors: true, headers: {"content-type": "application/json"}}, function(err, resp, body) {
         if (err) return notify(err)
         var lines = body.split(/\r?\n/)
-        var success = []
+        var created = []
+        var updated = []
         var conflicts = []
         lines.map(function(r) {
           if (r.length === 0) return
           var row = JSON.parse(r)
           if (row.conflict) conflicts.push(row)
-          else success.push(row)
+          else if (row.version === 1) created.push(row)
+          else updated.push(row)
         })
-        notify("New/updated: " + success.length + ' rows, conflicts: ' + conflicts.length + ' rows')
+        notify("New: " + created.length + ' rows, updated: ' + updated.length + ' rows, conflicts: ' + conflicts.length + ' rows')
+        refreshTable()
       })
       dialog.hide()
       dialogOverlay.hide()
@@ -248,18 +250,27 @@ module.exports = function(opts) {
     notify('Updating row...')
     xhr({ uri: state.remote + '/api/' + row.key, method: 'POST', json: row, cors: true }, function (err, resp, data) {
       if (err) return cb(err)
-      fetchAndRenderRows(function(err) {
+      refreshTable(function(err) {
         if (err) return cb(err)
         notify('Updated row ' + data.key + ' to version ' + data.version)
         cb(null, data)
       })
     })
   }
+  
+  function refreshTable(opts, cb) {
+    fetchAndRenderMetadata(function(err) {
+      fetchAndRenderRows(opts, function(err2) {
+        if (cb) cb(err || err2)
+      })
+    })
+  }
 
-  function fetchMetadata(cb) {
+  function fetchAndRenderMetadata(cb) {
     xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
+      render('metadata', '#metadata', {rows: addCommas(data.rows)})
       cb(err, data)
     })
   }
@@ -339,7 +350,7 @@ module.exports = function(opts) {
     state.newest = rows[0].key
     state.oldest = rows[rows.length - 1].key
   
-    if (state.offset + getPageSize() >= state.dbInfo.doc_count) {
+    if (state.offset + getPageSize() >= state.dbInfo.rows) {
       deactivate(dom( '.viewpanel-paging .last'))
       deactivate(dom( '.viewpanel-paging .next'))
     } else {
@@ -368,21 +379,21 @@ module.exports = function(opts) {
     dom('.viewPanel-pagingControls-page').on('click', function (event) {
       dom(".viewpanel-pagesize .selected").removeClass('selected')
       dom(event.target).addClass('selected')
-      fetchAndRenderRows(state.newest)
+      refreshTable(state.newest)
     })
     dom( '.viewpanel-paging a' ).on('click', function( e ) {
       var action = dom(e.target)
       if (action.hasClass("last")) {
-        fetchAndRenderRows({tail: getPageSize()})
+        refreshTable({tail: getPageSize()})
       }
       if (action.hasClass("next")) {
-        fetchAndRenderRows({start: state.oldest})
+        refreshTable({start: state.oldest})
       }
       if (action.hasClass("previous")) {
-        fetchAndRenderRows()
+        refreshTable()
       }
       if (action.hasClass("first")) {
-        fetchAndRenderRows()
+        refreshTable()
       }
     })
   }

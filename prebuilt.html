@@ -2224,6 +2224,7 @@ module.exports = function(opts) {
       notify('Uploading data...')
   
       xhr({uri: state.remote + '/api/bulk?results=true', method: "POST", body: input, cors: true, headers: {"content-type": "application/json"}}, function(err, resp, body) {
+        if (err) return notify(err)
         var lines = body.split(/\r?\n/)
         var success = []
         var conflicts = []
