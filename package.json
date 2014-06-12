@@ -16,9 +16,13 @@
     "component-delegate": "^0.2.2",
     "domify": "^1.2.2",
     "domquery": "^1.0.2",
+    "drag-and-drop-files": "0.0.1",
+    "filereader-stream": "^0.1.1",
     "mustache": "^0.8.1",
     "offset": "0.0.1",
+    "rainbow-load": "0.0.6",
     "siblings": "^1.0.1",
+    "streamcast": "maxogden/streamcast#destreamify",
     "xhr": "^1.7.0"
   },
   "devDependencies": {

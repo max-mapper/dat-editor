@@ -9,6 +9,11 @@ var on = require('component-delegate').bind
 var parents = require('closest')
 var siblings = require('siblings')
 var addCommas = require('add-commas')
+var drop = require('drag-and-drop-files')
+var guessType = require('streamcast')
+var fsReadStream = require('filereader-stream')
+var headStream = require('head-stream')
+var rainbow = require('rainbow-load')
 
 function noop() {}
 
@@ -97,6 +102,61 @@ module.exports = function(opts) {
   }
   
   function bindEvents() {
+    
+    function killEvent(e) {
+      e.stopPropagation()
+      e.preventDefault()
+      return false
+    }
+    
+    on(document.body, '.uploadImportContainer', 'dragenter', killEvent)
+    on(document.body, '.uploadImportContainer', 'dragover', killEvent)
+    
+    on(document.body, '.uploadImportContainer', 'drop', function(e) {
+      killEvent(e)
+      var files = Array.prototype.slice.call(e.dataTransfer.files)
+      var first = files[0]
+      
+      function upload(file, type) {
+        var headers = {"content-type": type}
+        rainbow.show({ autoRun: false })
+        var req = xhr({uri: state.remote + '/api/bulk', method: "POST", timeout: 0, body: file, cors: true, headers: headers}, function(err, resp, body) {
+          if (err) notify(err)
+          refreshTable()
+          rainbow.hide()
+        })
+        
+        req.upload.onprogress = function(e) {
+          if (e.lengthComputable) {
+            rainbow.progress((e.loaded / e.total) * 100)
+          }
+        }
+      }
+      
+      var read = fsReadStream(first)
+      var head = headStream(onFirstRow)
+      
+      read.on('error', noop) // ignore errors
+      
+      function onFirstRow(buffer, done) {
+        var type = guessType(buffer, {filename: first.name})
+        if (type === 'ndjson' || type === 'csv') {
+          var contentType
+          if (type === 'ndjson') contentType = 'application/json'
+          if (type === 'csv') contentType = 'text/csv'
+          upload(first, contentType)
+        } else {
+          notify('File type not supported')
+        }
+        dialog.hide()
+        dialogOverlay.hide()
+        read.abort()
+        done()
+      }
+      
+      read.pipe(head)
+    })
+    
     on(document.body, '.project-actions .button', 'click', function(e) {
       var el = e.target
       if (!dom(el).hasClass('button')) el = parents(el, '.button')
@@ -270,7 +330,7 @@ module.exports = function(opts) {
     xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
-      render('metadata', '#metadata', {rows: addCommas(data.rows)})
+      render('metadata', '#metadata', {rows: addCommas(data.rows || 0)})
       cb(err, data)
     })
   }
