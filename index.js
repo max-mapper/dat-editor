@@ -22,6 +22,7 @@ var templates = {
   tableContainer: fs.readFileSync('./templates/tableContainer.html').toString(),
   dataTable: fs.readFileSync('./templates/dataTable.html').toString(),
   metadata: fs.readFileSync('./templates/metadata.html').toString(),
+  controls: fs.readFileSync('./templates/controls.html').toString(),
   actions: fs.readFileSync('./templates/actions.html').toString(),
   rowActions: fs.readFileSync('./templates/rowActions.html').toString(),
   columnActions: fs.readFileSync('./templates/columnActions.html').toString(),
@@ -34,7 +35,8 @@ var templates = {
   transform: fs.readFileSync('./templates/transform.html').toString(),
   bulkEdit: fs.readFileSync('./templates/bulkEdit.html').toString(),
   cellEditor: fs.readFileSync('./templates/cellEditor.html').toString(),
-  networkError: fs.readFileSync('./templates/networkError.html').toString()
+  networkError: fs.readFileSync('./templates/networkError.html').toString(),
+  signIn: fs.readFileSync('./templates/signIn.html').toString()
 }
 
 module.exports = function(opts) {
@@ -82,6 +84,18 @@ module.exports = function(opts) {
   var dialogOverlay = dom('.dialog-overlay')
 
   bindEvents()
+  getSession()
+  
+  function getSession() {
+    xhr({ uri: state.remote + '/api/session', json: true, cors: true }, function (err, resp, json) {
+      if ( json.loggedOut ) {
+        var text = "Sign in"
+      } else {
+        var text = "Sign out"
+      }
+      render('controls', '.project-controls', {text: text});
+    })
+  }
   
   function bindEvents() {
     on(document.body, '.project-actions .button', 'click', function(e) {
@@ -113,7 +127,44 @@ module.exports = function(opts) {
       var actionFunc = actions[action]
       if (actionFunc) actionFunc()
     })
-
+    
+    on(document.body, '#logged-in-status', 'click', function(e) {
+      var text = dom(e.target).text()
+      if (text === "Sign in") {
+        showDialog("signIn")
+      } else if (text === "Sign out") {
+        notify("Signing you out...", {persist: true, loader: true})
+        xhr({ uri: state.remote + '/api/logout', json: true, cors: true }, function (err, resp, json) {
+          notify("Signed out")
+          render('controls', '.project-controls', {text: "Sign in"})
+        })
+      }
+    })
+    
+    on(document.body, '.signInContainer .okButton', 'click', function(e) {
+      var container = parents(e.target, '.signInContainer')
+      var user = dom(container).select('#username-input').val()
+      var pass = dom(container).select('#password-input').val()
+      var headers = {authorization: 'Basic ' + btoa(user + ':' + pass)}
+      xhr({ uri: state.remote + '/api/session', json: true, headers: headers, cors: true }, function (err, resp, json) {
+        if (err) return notify('Login error! ' + err.message)
+        if (json.loggedOut) return notify('Invalid username or password')
+        notify('Logged in')
+        render('controls', '.project-controls', {text: 'Sign out'})
+        dialog.hide()
+        dialogOverlay.hide()
+      })
+    })
+    
+    on(document.body, '#sign-in-form', 'submit', function(e) {
+      var container = parents(e.target, '.signInContainer')
+      e.preventDefault()
+      var button = dom(container).select('.okButton')[0]
+      var click = document.createEvent('HTMLEvents')
+      click.initEvent('click', true, false)
+      button.dispatchEvent(click)
+    })
+    
     on(document.body, '.data-table-cell-edit', 'click', function(e) {
       var editContainer = dom('.data-table-cell-editor')
       if (editContainer.length > 0) closeCellEdit(editContainer[0])
@@ -143,7 +194,7 @@ module.exports = function(opts) {
   
       notify('Uploading data...')
   
-      xhr({uri: state.remote + '/api/bulk?results=true', method: "POST", body: input, headers: {"content-type": "application/json"}}, function(err, resp, body) {
+      xhr({uri: state.remote + '/api/bulk?results=true', method: "POST", body: input, cors: true, headers: {"content-type": "application/json"}}, function(err, resp, body) {
         var lines = body.split(/\r?\n/)
         var success = []
         var conflicts = []
@@ -194,7 +245,7 @@ module.exports = function(opts) {
   function post(row, cb) {
     if (!cb) cb = noop
     notify('Updating row...')
-    xhr({ uri: state.remote + '/api/' + row.key, method: 'POST', json: row }, function (err, resp, data) {
+    xhr({ uri: state.remote + '/api/' + row.key, method: 'POST', json: row, cors: true }, function (err, resp, data) {
       if (err) return cb(err)
       fetchAndRenderRows(function(err) {
         if (err) return cb(err)
@@ -205,7 +256,7 @@ module.exports = function(opts) {
   }
 
   function fetchMetadata(cb) {
-    xhr({ uri: state.remote + '/api', json: true }, function (err, resp, data) {
+    xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
       cb(err, data)
@@ -236,7 +287,7 @@ module.exports = function(opts) {
   
     var uri = state.remote + '/api/json?' + qs.stringify(query)
   
-    xhr({ uri: uri, json: true }, function (err, resp, data) {
+    xhr({ uri: uri, json: true, cors: true }, function (err, resp, data) {
       if (err) {
         render('networkError', '.data-table-container')
         return cb(err)
