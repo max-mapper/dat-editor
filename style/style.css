@@ -20,6 +20,7 @@ blockquote,
 .code { color: #d1d1d1; background-color: #3F3F3F; margin: 0px 0px 20px 0px; padding: 5px; font-size: 13px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 .notice { background-color: #FFF9D8; margin-top: 20px; padding: 10px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 .ribbon { position: absolute; top: 0; right: 0; border: 0; }
+.uploadImportContainer #file { margin: 10px 0; }
 #download {float: right; position: relative; top: 3px; right: 5px;}
 #database{overflow:hidden;}
 #database h2{margin:0;}

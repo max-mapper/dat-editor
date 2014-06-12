@@ -1570,6 +1570,10 @@ blockquote,
   border: 0;
 }
 
+.uploadImportContainer #file {
+  margin: 10px 0;
+}
+
 #download {
   float: right;
   position: relative;
@@ -2037,6 +2041,7 @@ var qs = require('querystring')
 var on = require('component-delegate').bind
 var parents = require('closest')
 var siblings = require('siblings')
+var addCommas = require('add-commas')
 
 function noop() {}
 
@@ -2055,12 +2060,12 @@ var templates = {
   actions: Buffer("PGEgY2xhc3M9ImJ1dHRvbiIgZGF0YS1hY3Rpb249ImltcG9ydCIgaHJlZj0iamF2YXNjcmlwdDp7fSI+PHNwYW4gZGF0YS1hY3Rpb249ImltcG9ydCIgY2xhc3M9ImJ1dHRvbi1tZW51Ij5JbXBvcnQ8L3NwYW4+PC9hPgo8YSBjbGFzcz0iYnV0dG9uIiBkYXRhLWFjdGlvbj0iZXhwb3J0IiBocmVmPSJqYXZhc2NyaXB0Ont9Ij48c3BhbiBkYXRhLWFjdGlvbj0iZXhwb3J0IiBjbGFzcz0iYnV0dG9uLW1lbnUiPkV4cG9ydDwvc3Bhbj48L2E+","base64").toString(),
   rowActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJkZWxldGVSb3ciIGNsYXNzPSJtZW51QWN0aW9uIiBocmVmPSJKYXZhU2NyaXB0OnZvaWQoMCk7Ij5EZWxldGUgdGhpcyByb3c8L2E+PC9saT4K","base64").toString(),
   columnActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJidWxrRWRpdCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPlRyYW5zZm9ybS4uLjwvYT48L2xpPgo8bGk+PGEgZGF0YS1hY3Rpb249ImRlbGV0ZUNvbHVtbiIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPkRlbGV0ZSB0aGlzIGNvbHVtbjwvYT48L2xpPgo=","base64").toString(),
-  importActions: Buffer("PCEtLSA8bGk+PGEgZGF0YS1hY3Rpb249InVybEltcG9ydCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPkpTT04gQVBJPC9hPjwvbGk+IC0tPgo8bGk+PGEgZGF0YS1hY3Rpb249InBhc3RlSW1wb3J0IiBjbGFzcz0ibWVudUFjdGlvbiIgaHJlZj0iSmF2YVNjcmlwdDp2b2lkKDApOyI+UGFzdGUgSlNPTjwvYT48L2xpPgo8IS0tIDxsaT48YSBkYXRhLWFjdGlvbj0idXBsb2FkSW1wb3J0IiBjbGFzcz0ibWVudUFjdGlvbiIgaHJlZj0iSmF2YVNjcmlwdDp2b2lkKDApOyI+VXBsb2FkIENTVjwvYT48L2xpPiAtLT4K","base64").toString(),
+  importActions: Buffer("PCEtLSA8bGk+PGEgZGF0YS1hY3Rpb249InVybEltcG9ydCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPkpTT04gQVBJPC9hPjwvbGk+IC0tPgo8bGk+PGEgZGF0YS1hY3Rpb249InBhc3RlSW1wb3J0IiBjbGFzcz0ibWVudUFjdGlvbiIgaHJlZj0iSmF2YVNjcmlwdDp2b2lkKDApOyI+UGFzdGUgSlNPTjwvYT48L2xpPgo8bGk+PGEgZGF0YS1hY3Rpb249InVwbG9hZEltcG9ydCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPlVwbG9hZCBGaWxlPC9hPjwvbGk+Cg==","base64").toString(),
   exportActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJjc3YiIGNsYXNzPSJtZW51QWN0aW9uIiBocmVmPSJKYXZhU2NyaXB0OnZvaWQoMCk7Ij5DU1Y8L2E+PC9saT4KPGxpPjxhIGRhdGEtYWN0aW9uPSJqc29uIiBjbGFzcz0ibWVudUFjdGlvbiIgaHJlZj0iSmF2YVNjcmlwdDp2b2lkKDApOyI+SlNPTjwvYT48L2xpPgo=","base64").toString(),
   transformActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJ0cmFuc2Zvcm0iIGNsYXNzPSJtZW51QWN0aW9uIiBocmVmPSJKYXZhU2NyaXB0OnZvaWQoMCk7Ij5HbG9iYWwgdHJhbnNmb3JtLi4uPC9hPjwvbGk+Cg==","base64").toString(),
   urlImport: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgRG93bmxvYWQgYW5kIGltcG9ydCBmcm9tIGEgVVJMIG9yIEFQSQo8L2Rpdj4KPGRpdiBjbGFzcz0iZGlhbG9nLWJvZHkiPgogIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC1mdWxsIj4KICAgIDxwIGNsYXNzPSJpbmZvIj4KICAgICAgQ3VycmVudGx5IG9ubHkgPGEgaHJlZj0iaHR0cDovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9KU09OUCI+SlNPTlA8L2E+LWVuYWJsZWQgQVBJcyBhcmUgc3VwcG9ydGVkLCBmb3IgZXhhbXBsZToKICAgIDwvcD4KICAgIDxwIGNsYXNzPSJpbmZvIj4KICAgICAgPGNvZGU+aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy9tYXhvZ2Rlbi9yZWNsaW5lL2NvbW1pdHM8L2NvZGU+CiAgICA8L3A+CiAgICA8Zm9ybSBuYW1lPSJhcGktaW1wb3J0LWZvcm0iIGlkPSJzaWduLWluLWZvcm0iPgogICAgICA8dGFibGUgY2xhc3M9ImZvcm0tdGFibGUiPgogICAgICAgIDx0Ym9keT4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAgPHRoPgogICAgICAgICAgICAgIDxsYWJlbCBmb3I9InVybCI+VVJMPC9sYWJlbD4KICAgICAgICAgICAgPC90aD4KICAgICAgICAgICAgPHRkPgogICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBzaXplPSI2NSIgaWQ9InVybC1pbnB1dCIgbmFtZT0idXJsIj4KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgIDwvdHI+CiAgICAgICAgICA8aW5wdXQgdHlwZT0ic3VibWl0IiBzdHlsZT0iaGVpZ2h0OiAwcHg7IHdpZHRoOiAwcHg7IGJvcmRlcjogbm9uZTsgcGFkZGluZzogMHB4OyBkaXNwbGF5OiBub25lOyIgaGlkZWZvY3VzPSJ0cnVlIiAvPgogICAgICAgIDwvdGJvZHk+CiAgICAgIDwvdGFibGU+CiAgICA8L2Zvcm0+CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctZm9vdGVyIj4KICA8YnV0dG9uIGNsYXNzPSJva0J1dHRvbiBidXR0b24iPiZuYnNwOyZuYnNwO0ZldGNoJm5ic3A7Jm5ic3A7PC9idXR0b24+CiAgPGJ1dHRvbiBjbGFzcz0iY2FuY2VsQnV0dG9uIGJ1dHRvbiI+Q2FuY2VsPC9idXR0b24+CjwvZGl2Pg==","base64").toString(),
   pasteImport: Buffer("PGRpdiBjbGFzcz0ianNvbi1wYXN0ZS1pbXBvcnQiPgogIDxkaXYgY2xhc3M9ImRpYWxvZy1oZWFkZXIiPgogICAgSW1wb3J0IHJhdyBjb3B5ICYgcGFzdGVkIEpTT04KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtdGlnaHQgbGF5b3V0LWZ1bGwiPgogICAgICA8cCBjbGFzcz0iaW5mbyI+CiAgICAgICAgUGFzdGUgaW4gSlNPTiBvYmplY3RzIChvbmUgcGVyIGxpbmUpIHJlcHJlc2VudGluZyB0aGUgcm93cyB0aGF0IHlvdSB3b3VsZCBsaWtlIHRvIGluc2VydCBpbnRvIGRhdC4KICAgICAgPC9wPgogICAgICA8cCBjbGFzcz0iaW5mbyI+CiAgICAgICAgPGNvZGU+eyJrZXkiOiAicGl6emEiLCAidGFzdHkiOiB0cnVlfTxicj57ImtleSI6ICJ0YWNvcyIsICJ0YXN0aWVzdCI6IHRydWV9PC9jb2RlPgogICAgICA8L3A+CiAgICAgIDxkaXYgY2xhc3M9Im1lbnUtY29udGFpbmVyIGRhdGEtdGFibGUtY2VsbC1lZGl0b3IiPgogICAgICAgIDx0ZXh0YXJlYSBjbGFzcz0iZGF0YS10YWJsZS1jZWxsLWNvcHlwYXN0ZS1lZGl0b3IiIGJpbmQ9InRleHRhcmVhIj57e3ZhbHVlfX08L3RleHRhcmVhPgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogIDwvZGl2PgogIDxkaXYgY2xhc3M9ImRpYWxvZy1mb290ZXIiPgogICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj4mbmJzcDsmbmJzcDtJbXBvcnQmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICAgIDxidXR0b24gY2xhc3M9ImNhbmNlbEJ1dHRvbiBidXR0b24iPkNhbmNlbDwvYnV0dG9uPgogIDwvZGl2Pgo8L2Rpdj4=","base64").toString(),
-  uploadImport: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgVXBsb2FkIGFuZCBpbXBvcnQgYSBDU1YKPC9kaXY+CjxkaXYgY2xhc3M9ImRpYWxvZy1ib2R5Ij4KICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtdGlnaHQgbGF5b3V0LWZ1bGwiPgogICAgPHN0cm9uZz5QbGVhc2UgY2hvb3NlIGEgQ1NWIGZpbGUgdG8gdXBsb2FkOjwvc3Ryb25nPjxiciAvPgogICAgPGlucHV0IHR5cGU9ImZpbGUiIGlkPSJmaWxlIiAvPgogIDwvZGl2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iZGlhbG9nLWZvb3RlciI+CiAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj4mbmJzcDsmbmJzcDtJbXBvcnQmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KPC9kaXY+","base64").toString(),
+  uploadImport: Buffer("PGRpdiBjbGFzcz0idXBsb2FkSW1wb3J0Q29udGFpbmVyIj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctaGVhZGVyIj4KICAgIFVwbG9hZCBhbmQgaW1wb3J0IGEgdGFidWxhciBkYXRhIGZpbGUKICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtdGlnaHQgbGF5b3V0LWZ1bGwiPgogICAgICA8c3Ryb25nPk9ubHkgQ1NWIGFuZCA8YSBocmVmPSJodHRwczovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9MaW5lX0RlbGltaXRlZF9KU09OIj5uZXdsaW5lIGRlbGltaXRlZCBKU09OPC9hPiBhcmUgc3VwcG9ydGVkPC9zdHJvbmc+PGJyIC8+CiAgICAgIDxpbnB1dCB0eXBlPSJmaWxlIiBpZD0iZmlsZSIgLz4KICAgIDwvZGl2PgogIDwvZGl2PgogIDxkaXYgY2xhc3M9ImRpYWxvZy1mb290ZXIiPgogICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj4mbmJzcDsmbmJzcDtJbXBvcnQmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICAgIDxidXR0b24gY2xhc3M9ImNhbmNlbEJ1dHRvbiBidXR0b24iPkNhbmNlbDwvYnV0dG9uPgogIDwvZGl2Pgo8L2Rpdj4=","base64").toString(),
   transform: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgUmVjdXJzaXZlIHRyYW5zZm9ybSBvbiBhbGwgcm93cwo8L2Rpdj4KPGRpdiBjbGFzcz0iZGlhbG9nLWJvZHkiPgogIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC1mdWxsIj4KICAgIDxwIGNsYXNzPSJpbmZvIj5UcmF2ZXJzZSBhbmQgdHJhbnNmb3JtIG9iamVjdHMgYnkgdmlzaXRpbmcgZXZlcnkgbm9kZSBvbiBhIHJlY3Vyc2l2ZSB3YWxrIHVzaW5nIDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9zdWJzdGFjay9qcy10cmF2ZXJzZSI+anMtdHJhdmVyc2U8L2E+LjwvcD4KICAgIDx0YWJsZT4KICAgIDx0Ym9keT4KICAgIDx0cj4KICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC10aWdodCBsYXlvdXQtZnVsbCI+CiAgICAgICAgICA8dGFibGUgcm93cz0iNCIgY29scz0iNCI+CiAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICA8dHIgc3R5bGU9InZlcnRpY2FsLWFsaWduOiBib3R0b207Ij4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIEV4cHJlc3Npb24KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgIDwvdHI+CiAgICAgICAgICA8dHI+CiAgICAgICAgICAgIDx0ZCBjb2xzcGFuPSIzIj4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1jb250YWluZXIiPgogICAgICAgICAgICAgICAgPHRleHRhcmVhIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctY29kZSI+PC90ZXh0YXJlYT4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgICAgPHRkIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctcGFyc2luZy1zdGF0dXMiIHdpZHRoPSIxNTAiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjogdG9wOyI+CiAgICAgICAgICAgICAgTm8gc3ludGF4IGVycm9yLgogICAgICAgICAgICA8L3RkPgogICAgICAgICAgPC90cj4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIDxkaXYgaWQ9ImV4cHJlc3Npb24tcHJldmlldy10YWJzIiBjbGFzcz0icmVmaW5lLXRhYnMgdWktdGFicyB1aS13aWRnZXQgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWFsbCI+CiAgICAgICAgICAgICAgICA8c3Bhbj5QcmV2aWV3PC9zcGFuPgogICAgICAgICAgICAgICAgPGRpdiBpZD0iZXhwcmVzc2lvbi1wcmV2aWV3LXRhYnMtcHJldmlldyIgY2xhc3M9InVpLXRhYnMtcGFuZWwgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWJvdHRvbSI+CiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImV4cHJlc3Npb24tcHJldmlldy1jb250YWluZXIiIHN0eWxlPSJ3aWR0aDogNjUycHg7ICI+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICA8L3RyPgogICAgICAgICAgPC90Ym9keT4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICAgIDwvdGQ+CiAgICA8L3RyPgogICAgPC90Ym9keT4KICAgIDwvdGFibGU+CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctZm9vdGVyIj4KICA8YnV0dG9uIGNsYXNzPSJva0J1dHRvbiBidXR0b24iPiZuYnNwOyZuYnNwO1VwZGF0ZSBBbGwmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KPC9kaXY+","base64").toString(),
   bulkEdit: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgRnVuY3Rpb25hbCB0cmFuc2Zvcm0gb24gY29sdW1uIHt7bmFtZX19CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgPGRpdiBjbGFzcz0iZ3JpZC1sYXlvdXQgbGF5b3V0LXRpZ2h0IGxheW91dC1mdWxsIj4KICAgIDx0YWJsZT4KICAgIDx0Ym9keT4KICAgIDx0cj4KICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC10aWdodCBsYXlvdXQtZnVsbCI+CiAgICAgICAgICA8dGFibGUgcm93cz0iNCIgY29scz0iNCI+CiAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICA8dHIgc3R5bGU9InZlcnRpY2FsLWFsaWduOiBib3R0b207Ij4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIEV4cHJlc3Npb24KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgIDwvdHI+CiAgICAgICAgICA8dHI+CiAgICAgICAgICAgIDx0ZCBjb2xzcGFuPSIzIj4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1jb250YWluZXIiPgogICAgICAgICAgICAgICAgPHRleHRhcmVhIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctY29kZSI+PC90ZXh0YXJlYT4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgICAgPHRkIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctcGFyc2luZy1zdGF0dXMiIHdpZHRoPSIxNTAiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjogdG9wOyI+CiAgICAgICAgICAgICAgTm8gc3ludGF4IGVycm9yLgogICAgICAgICAgICA8L3RkPgogICAgICAgICAgPC90cj4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIDxkaXYgaWQ9ImV4cHJlc3Npb24tcHJldmlldy10YWJzIiBjbGFzcz0icmVmaW5lLXRhYnMgdWktdGFicyB1aS13aWRnZXQgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWFsbCI+CiAgICAgICAgICAgICAgICA8c3Bhbj5QcmV2aWV3PC9zcGFuPgogICAgICAgICAgICAgICAgPGRpdiBpZD0iZXhwcmVzc2lvbi1wcmV2aWV3LXRhYnMtcHJldmlldyIgY2xhc3M9InVpLXRhYnMtcGFuZWwgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWJvdHRvbSI+CiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImV4cHJlc3Npb24tcHJldmlldy1jb250YWluZXIiIHN0eWxlPSJ3aWR0aDogNjUycHg7ICI+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICA8L3RyPgogICAgICAgICAgPC90Ym9keT4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICAgIDwvdGQ+CiAgICA8L3RyPgogICAgPC90Ym9keT4KICAgIDwvdGFibGU+CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctZm9vdGVyIj4KICA8YnV0dG9uIGNsYXNzPSJva0J1dHRvbiBidXR0b24iPiZuYnNwOyZuYnNwO1VwZGF0ZSBBbGwmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KPC9kaXY+","base64").toString(),
   cellEditor: Buffer("PGRpdiBjbGFzcz0ibWVudS1jb250YWluZXIgZGF0YS10YWJsZS1jZWxsLWVkaXRvciI+CiAgPHRleHRhcmVhIGNsYXNzPSJkYXRhLXRhYmxlLWNlbGwtZWRpdG9yLWVkaXRvciIgYmluZD0idGV4dGFyZWEiPnt7dmFsdWV9fTwvdGV4dGFyZWE+CiAgPGRpdiBpZD0iZGF0YS10YWJsZS1jZWxsLWVkaXRvci1hY3Rpb25zIj4KICAgIDxkaXYgY2xhc3M9ImRhdGEtdGFibGUtY2VsbC1lZGl0b3ItYWN0aW9uIj4KICAgICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj5VcGRhdGU8L2J1dHRvbj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0iZGF0YS10YWJsZS1jZWxsLWVkaXRvci1hY3Rpb24iPgogICAgICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KICAgIDwvZGl2PgogIDwvZGl2Pgo8L2Rpdj4=","base64").toString(),
@@ -2094,11 +2099,7 @@ module.exports = function(opts) {
     uploadImport: function() { showDialog('uploadImport') },
   }
 
-  fetchMetadata(function(err, metadata) {
-    if (err) return console.error(err)
-    render('metadata', '#metadata', metadata)
-    fetchAndRenderRows()
-  })
+  refreshTable()
 
   render('title', '.project-title', {db_name: 'Dat Database'})
   render('tableContainer', '.right-panel')
@@ -2119,8 +2120,10 @@ module.exports = function(opts) {
     xhr({ uri: state.remote + '/api/session', json: true, cors: true }, function (err, resp, json) {
       if ( json.loggedOut ) {
         var text = "Sign in"
-      } else {
+      } else if (json.session) {
         var text = "Sign out"
+      } else {
+        return
       }
       render('controls', '.project-controls', {text: text});
     })
@@ -2226,15 +2229,18 @@ module.exports = function(opts) {
       xhr({uri: state.remote + '/api/bulk?results=true', method: "POST", body: input, cors: true, headers: {"content-type": "application/json"}}, function(err, resp, body) {
         if (err) return notify(err)
         var lines = body.split(/\r?\n/)
-        var success = []
+        var created = []
+        var updated = []
         var conflicts = []
         lines.map(function(r) {
           if (r.length === 0) return
           var row = JSON.parse(r)
           if (row.conflict) conflicts.push(row)
-          else success.push(row)
+          else if (row.version === 1) created.push(row)
+          else updated.push(row)
         })
-        notify("New/updated: " + success.length + ' rows, conflicts: ' + conflicts.length + ' rows')
+        notify("New: " + created.length + ' rows, updated: ' + updated.length + ' rows, conflicts: ' + conflicts.length + ' rows')
+        refreshTable()
       })
       dialog.hide()
       dialogOverlay.hide()
@@ -2277,18 +2283,27 @@ module.exports = function(opts) {
     notify('Updating row...')
     xhr({ uri: state.remote + '/api/' + row.key, method: 'POST', json: row, cors: true }, function (err, resp, data) {
       if (err) return cb(err)
-      fetchAndRenderRows(function(err) {
+      refreshTable(function(err) {
         if (err) return cb(err)
         notify('Updated row ' + data.key + ' to version ' + data.version)
         cb(null, data)
       })
     })
   }
+  
+  function refreshTable(opts, cb) {
+    fetchAndRenderMetadata(function(err) {
+      fetchAndRenderRows(opts, function(err2) {
+        if (cb) cb(err || err2)
+      })
+    })
+  }
 
-  function fetchMetadata(cb) {
+  function fetchAndRenderMetadata(cb) {
     xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
+      render('metadata', '#metadata', {rows: addCommas(data.rows)})
       cb(err, data)
     })
   }
@@ -2368,7 +2383,7 @@ module.exports = function(opts) {
     state.newest = rows[0].key
     state.oldest = rows[rows.length - 1].key
   
-    if (state.offset + getPageSize() >= state.dbInfo.doc_count) {
+    if (state.offset + getPageSize() >= state.dbInfo.rows) {
       deactivate(dom( '.viewpanel-paging .last'))
       deactivate(dom( '.viewpanel-paging .next'))
     } else {
@@ -2397,21 +2412,21 @@ module.exports = function(opts) {
     dom('.viewPanel-pagingControls-page').on('click', function (event) {
       dom(".viewpanel-pagesize .selected").removeClass('selected')
       dom(event.target).addClass('selected')
-      fetchAndRenderRows(state.newest)
+      refreshTable(state.newest)
     })
     dom( '.viewpanel-paging a' ).on('click', function( e ) {
       var action = dom(e.target)
       if (action.hasClass("last")) {
-        fetchAndRenderRows({tail: getPageSize()})
+        refreshTable({tail: getPageSize()})
       }
       if (action.hasClass("next")) {
-        fetchAndRenderRows({start: state.oldest})
+        refreshTable({start: state.oldest})
       }
       if (action.hasClass("previous")) {
-        fetchAndRenderRows()
+        refreshTable()
       }
       if (action.hasClass("first")) {
-        fetchAndRenderRows()
+        refreshTable()
       }
     })
   }
@@ -2452,7 +2467,30 @@ module.exports = function(opts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":2,"closest":11,"component-delegate":13,"domquery":18,"mustache":48,"offset":49,"querystring":9,"siblings":50,"url":10,"xhr":52}],2:[function(require,module,exports){
+},{"add-commas":2,"buffer":3,"closest":12,"component-delegate":14,"domquery":19,"mustache":49,"offset":50,"querystring":10,"siblings":51,"url":11,"xhr":53}],2:[function(require,module,exports){
+module.exports = function (n) {
+    var nInt = parseInt(n, 10);
+
+    if (nInt === NaN) {
+        throw new Error('not a number');
+    }
+    else if (nInt.toString() !== n.toString()) {
+        throw new Error('not an integer');
+    }
+    else {
+        var nStr = n.toString();
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2; 
+    }
+};
+},{}],3:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -3603,7 +3641,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":3,"ieee754":4}],3:[function(require,module,exports){
+},{"base64-js":4,"ieee754":5}],4:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -3725,7 +3763,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -3811,7 +3849,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3876,7 +3914,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 /*! http://mths.be/punycode v1.2.4 by @mathias */
 ;(function(root) {
@@ -4387,7 +4425,7 @@ process.chdir = function (dir) {
 }(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4473,7 +4511,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4560,13 +4598,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":7,"./encode":8}],10:[function(require,module,exports){
+},{"./decode":8,"./encode":9}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5275,7 +5313,7 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":6,"querystring":9}],11:[function(require,module,exports){
+},{"punycode":7,"querystring":10}],12:[function(require,module,exports){
 var matches = require('matches-selector')
 
 module.exports = function (element, selector, checkYoSelf) {
@@ -5287,7 +5325,7 @@ module.exports = function (element, selector, checkYoSelf) {
   }
 }
 
-},{"matches-selector":12}],12:[function(require,module,exports){
+},{"matches-selector":13}],13:[function(require,module,exports){
 
 /**
  * Element prototype.
@@ -5328,7 +5366,7 @@ function match(el, selector) {
   }
   return false;
 }
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -5372,7 +5410,7 @@ exports.unbind = function(el, type, fn, capture){
   event.unbind(el, type, fn, capture);
 };
 
-},{"closest":15,"event":14}],14:[function(require,module,exports){
+},{"closest":16,"event":15}],15:[function(require,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -5408,7 +5446,7 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var matches = require('matches-selector')
 
 module.exports = function (element, selector, checkYoSelf, root) {
@@ -5428,7 +5466,7 @@ module.exports = function (element, selector, checkYoSelf, root) {
       return  
   }
 }
-},{"matches-selector":16}],16:[function(require,module,exports){
+},{"matches-selector":17}],17:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -5475,7 +5513,7 @@ function match(el, selector) {
   return false;
 }
 
-},{"query":17}],17:[function(require,module,exports){
+},{"query":18}],18:[function(require,module,exports){
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -5498,7 +5536,7 @@ exports.engine = function(obj){
   return exports;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var newElement = require("new-element");
 var select = require("./lib/select");
 
@@ -5513,7 +5551,7 @@ function create (tag) {
   return select(document.createElement(tag));
 }
 
-},{"./lib/select":22,"new-element":45}],19:[function(require,module,exports){
+},{"./lib/select":23,"new-element":46}],20:[function(require,module,exports){
 module.exports = attr;
 
 function attr (chain) {
@@ -5528,7 +5566,7 @@ function attr (chain) {
   };
 }
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var events = require("dom-event");
 var delegate = require("component-delegate");
 var keyEvent = require("key-event");
@@ -5586,7 +5624,7 @@ function offKey (element, key, callback) {
   keyEvent.off(element, key, callback);
 }
 
-},{"component-delegate":13,"dom-event":27,"key-event":41,"trim":47}],21:[function(require,module,exports){
+},{"component-delegate":14,"dom-event":28,"key-event":42,"trim":48}],22:[function(require,module,exports){
 var format = require('format-text');
 
 module.exports = html;
@@ -5602,7 +5640,7 @@ function html (chain) {
   };
 }
 
-},{"format-text":40}],22:[function(require,module,exports){
+},{"format-text":41}],23:[function(require,module,exports){
 var newChain = require("new-chain");
 var format = require('format-text');
 var classes = require('dom-classes');
@@ -5688,7 +5726,7 @@ function select(query){
   return chain;
 }
 
-},{"./attr":19,"./events":20,"./html":21,"./text":23,"./value":24,"dom-classes":25,"dom-select":29,"dom-style":31,"dom-tree":35,"format-text":40,"new-chain":44,"new-element":45}],23:[function(require,module,exports){
+},{"./attr":20,"./events":21,"./html":22,"./text":24,"./value":25,"dom-classes":26,"dom-select":30,"dom-style":32,"dom-tree":36,"format-text":41,"new-chain":45,"new-element":46}],24:[function(require,module,exports){
 var format = require('format-text');
 
 module.exports = text;
@@ -5704,7 +5742,7 @@ function text (chain){
   };
 }
 
-},{"format-text":40}],24:[function(require,module,exports){
+},{"format-text":41}],25:[function(require,module,exports){
 var value = require("dom-value");
 
 module.exports = withChain;
@@ -5720,7 +5758,7 @@ function withChain (chain) {
   };
 }
 
-},{"dom-value":38}],25:[function(require,module,exports){
+},{"dom-value":39}],26:[function(require,module,exports){
 /**
  * Module dependencies.
  */
@@ -5819,7 +5857,7 @@ function toggle (el, name) {
   }
 }
 
-},{"indexof":26}],26:[function(require,module,exports){
+},{"indexof":27}],27:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -5830,7 +5868,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = on;
 module.exports.on = on;
 module.exports.off = off;
@@ -5845,7 +5883,7 @@ function off (element, event, callback, capture) {
   return callback;
 }
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var qwery = require("qwery");
 
 module.exports = {
@@ -5861,7 +5899,7 @@ function one (selector, parent) {
   return all(selector, parent)[0];
 }
 
-},{"qwery":30}],29:[function(require,module,exports){
+},{"qwery":31}],30:[function(require,module,exports){
 var fallback = require('./fallback');
 
 module.exports = one;
@@ -5887,7 +5925,7 @@ function all (selector, parent) {
   return fallback.all(selector, parent);
 }
 
-},{"./fallback":28}],30:[function(require,module,exports){
+},{"./fallback":29}],31:[function(require,module,exports){
 /*!
   * @preserve Qwery - A Blazing Fast query selector engine
   * https://github.com/ded/qwery
@@ -6258,7 +6296,7 @@ function all (selector, parent) {
   return qwery
 });
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var toCamelCase = require("to-camel-case");
 
 module.exports = style;
@@ -6290,7 +6328,7 @@ function style(element){
   return all(element, arguments[1]);
 }
 
-},{"to-camel-case":32}],32:[function(require,module,exports){
+},{"to-camel-case":33}],33:[function(require,module,exports){
 
 var toSpace = require('to-space-case');
 
@@ -6315,7 +6353,7 @@ function toCamelCase (string) {
     return letter.toUpperCase();
   });
 }
-},{"to-space-case":33}],33:[function(require,module,exports){
+},{"to-space-case":34}],34:[function(require,module,exports){
 
 var clean = require('to-no-case');
 
@@ -6340,7 +6378,7 @@ function toSpaceCase (string) {
     return match ? ' ' + match : '';
   });
 }
-},{"to-no-case":34}],34:[function(require,module,exports){
+},{"to-no-case":35}],35:[function(require,module,exports){
 
 /**
  * Expose `toNoCase`.
@@ -6415,7 +6453,7 @@ function uncamelize (string) {
     return previous + ' ' + uppers.toLowerCase().split('').join(' ');
   });
 }
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 var newElement = require("./new-element");
 var select = require('./select');
 
@@ -6491,7 +6529,7 @@ function withChildren (fn) {
   };
 }
 
-},{"./new-element":36,"./select":37}],36:[function(require,module,exports){
+},{"./new-element":37,"./select":38}],37:[function(require,module,exports){
 var newElement = require("new-element");
 
 module.exports = ifNecessary;
@@ -6505,7 +6543,7 @@ function isHTML(text){
   return typeof text == 'string' && text.charAt(0) == '<';
 }
 
-},{"new-element":45}],37:[function(require,module,exports){
+},{"new-element":46}],38:[function(require,module,exports){
 var select = require('dom-select');
 
 module.exports = ifNecessary;
@@ -6543,7 +6581,7 @@ function ifNecessaryAll (child, parent) {
   return select.all(child, parent);
 }
 
-},{"dom-select":29}],38:[function(require,module,exports){
+},{"dom-select":30}],39:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -6640,7 +6678,7 @@ function type(el) {
   return name;
 }
 
-},{"component-type":39}],39:[function(require,module,exports){
+},{"component-type":40}],40:[function(require,module,exports){
 
 /**
  * toString ref.
@@ -6674,7 +6712,7 @@ module.exports = function(val){
   return typeof val;
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 module.exports = format;
 
 function format(text) {
@@ -6707,7 +6745,7 @@ function replace (context, nil){
   }
 }
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 var keynameOf = require("keyname-of");
 var events = require("dom-event");
 
@@ -6769,7 +6807,7 @@ function parse (keys){
   return result;
 }
 
-},{"dom-event":27,"keyname-of":42}],42:[function(require,module,exports){
+},{"dom-event":28,"keyname-of":43}],43:[function(require,module,exports){
 var map = require("keynames");
 
 module.exports = keynameOf;
@@ -6778,7 +6816,7 @@ function keynameOf (n) {
    return map[n] || String.fromCharCode(n).toLowerCase();
 }
 
-},{"keynames":43}],43:[function(require,module,exports){
+},{"keynames":44}],44:[function(require,module,exports){
 module.exports = {
   8   : 'backspace',
   9   : 'tab',
@@ -6804,7 +6842,7 @@ module.exports = {
   224 : 'meta'
 };
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = newChain;
 module.exports.from = from;
 
@@ -6861,7 +6899,7 @@ function newChain(){
   return from({}).apply(undefined, arguments);
 }
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 var domify = require("domify");
 var format = require("format-text");
 
@@ -6872,7 +6910,7 @@ function newElement (html, vars) {
   return domify(format(html, vars));
 }
 
-},{"domify":46,"format-text":40}],46:[function(require,module,exports){
+},{"domify":47,"format-text":41}],47:[function(require,module,exports){
 
 /**
  * Expose `parse`.
@@ -6945,7 +6983,7 @@ function parse(html) {
   return fragment;
 }
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -6961,7 +6999,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -7533,7 +7571,7 @@ exports.right = function(str){
 
 }));
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 // http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
 module.exports = function(el) {
   if (el.getBoundingClientRect) {
@@ -7550,7 +7588,7 @@ module.exports = function(el) {
     return { "left": x, "top": y }
   }
 }
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var matches = require('matches-selector')
 
 module.exports = function(el, selector) {
@@ -7567,7 +7605,7 @@ module.exports = function(el, selector) {
   return siblings
 }
 
-},{"matches-selector":51}],51:[function(require,module,exports){
+},{"matches-selector":52}],52:[function(require,module,exports){
 'use strict';
 
 var proto = Element.prototype;
@@ -7597,7 +7635,7 @@ function match(el, selector) {
   }
   return false;
 }
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 var window = require("global/window")
 var once = require("once")
 
@@ -7719,7 +7757,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":53,"once":54}],53:[function(require,module,exports){
+},{"global/window":54,"once":55}],54:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window
@@ -7730,7 +7768,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -7751,7 +7789,7 @@ function once (fn) {
   }
 }
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 (function (process){
 var createEditor = require('./')
 
@@ -7762,6 +7800,6 @@ var opts = {
 createEditor(opts)
 
 }).call(this,require("FWaASH"))
-},{"./":1,"FWaASH":5}]},{},[55])</script>
+},{"./":1,"FWaASH":6}]},{},[56])</script>
 </body>
 </html>

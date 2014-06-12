@@ -1,13 +1,15 @@
-<div class="dialog-header">
-  Upload and import a CSV
-</div>
-<div class="dialog-body">
-  <div class="grid-layout layout-tight layout-full">
-    <strong>Please choose a CSV file to upload:</strong><br />
-    <input type="file" id="file" />
+<div class="uploadImportContainer">
+  <div class="dialog-header">
+    Upload and import a tabular data file
   </div>
-</div>
-<div class="dialog-footer">
-  <button class="okButton button">&nbsp;&nbsp;Import&nbsp;&nbsp;</button>
-  <button class="cancelButton button">Cancel</button>
+  <div class="dialog-body">
+    <div class="grid-layout layout-tight layout-full">
+      <strong>Only CSV and <a href="https://en.wikipedia.org/wiki/Line_Delimited_JSON">newline delimited JSON</a> are supported</strong><br />
+      <input type="file" id="file" />
+    </div>
+  </div>
+  <div class="dialog-footer">
+    <button class="okButton button">&nbsp;&nbsp;Import&nbsp;&nbsp;</button>
+    <button class="cancelButton button">Cancel</button>
+  </div>
 </div>
