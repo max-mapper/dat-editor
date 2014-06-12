@@ -1586,6 +1586,11 @@ blockquote,
   text-align: center;
 }
 
+.uploadImportContainer progress {
+  width: 80%;
+  margin: 20px 0;
+}
+
 #download {
   float: right;
   position: relative;
@@ -2058,7 +2063,6 @@ var drop = require('drag-and-drop-files')
 var guessType = require('streamcast')
 var fsReadStream = require('filereader-stream')
 var headStream = require('head-stream')
-var rainbow = require('rainbow-load')
 
 function noop() {}
 
@@ -2164,16 +2168,20 @@ module.exports = function(opts) {
       
       function upload(file, type) {
         var headers = {"content-type": type}
-        rainbow.show({ autoRun: false })
-        var req = xhr({uri: state.remote + '/api/bulk', method: "POST", timeout: 0, body: file, cors: true, headers: headers}, function(err, resp, body) {
+        var progressBar = dom('<progress max="100" value="0"></progress>')
+        dom('.uploadImportContainer .dialog-body .grid-layout').add(progressBar)
+        
+        var req = xhr({uri: state.remote + '/api/bulk', method: "POST", timeout: 0, body: file, cors: true, headers: headers, onUploadProgress: onProgress}, function(err, resp, body) {
           if (err) notify(err)
           refreshTable()
-          rainbow.hide()
+          dialog.hide()
+          dialogOverlay.hide()
         })
         
-        req.upload.onprogress = function(e) {
+        function onProgress(e) {
           if (e.lengthComputable) {
-            rainbow.progress((e.loaded / e.total) * 100)
+            var progress = ((e.loaded / e.total) * 100)
+            progressBar.attr('value', progress)
           }
         }
       }
@@ -2191,10 +2199,10 @@ module.exports = function(opts) {
           if (type === 'csv') contentType = 'text/csv'
           upload(first, contentType)
         } else {
+          dialog.hide()
+          dialogOverlay.hide()
           notify('File type not supported')
         }
-        dialog.hide()
-        dialogOverlay.hide()
         read.abort()
         done()
       }
@@ -2539,7 +2547,7 @@ module.exports = function(opts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"add-commas":2,"buffer":3,"closest":29,"component-delegate":31,"domquery":36,"drag-and-drop-files":66,"filereader-stream":67,"head-stream":78,"mustache":69,"offset":70,"querystring":13,"rainbow-load":71,"siblings":72,"streamcast":80,"url":28,"xhr":74}],2:[function(require,module,exports){
+},{"add-commas":2,"buffer":3,"closest":29,"component-delegate":31,"domquery":36,"drag-and-drop-files":66,"filereader-stream":67,"head-stream":77,"mustache":69,"offset":70,"querystring":13,"siblings":71,"streamcast":79,"url":28,"xhr":73}],2:[function(require,module,exports){
 module.exports = function (n) {
     var nInt = parseInt(n, 10);
 
@@ -10362,147 +10370,6 @@ module.exports = function(el) {
   }
 }
 },{}],71:[function(require,module,exports){
-/*! rainbow-load 0.0.5, 2013-08-22
- *  https://github.com/buunguyen/rainbow.js
- *  Copyright (c) 2013 Buu Nguyen
- *  Licensed under the MIT */
-;(function(window, document) {
-    // https://gist.github.com/paulirish/1579671
-    (function() {
-        var lastTime = 0;
-        var vendors = ['ms', 'moz', 'webkit', 'o'];
-        for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-                || window[vendors[x]+'CancelRequestAnimationFrame'];
-        }
-        if (!window.requestAnimationFrame)
-            window.requestAnimationFrame = function(callback, element) {
-                var currTime = new Date().getTime();
-                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-                    timeToCall);
-                lastTime = currTime + timeToCall;
-                return id;
-            };
-        if (!window.cancelAnimationFrame)
-            window.cancelAnimationFrame = function(id) {
-                clearTimeout(id);
-            };
-    }());
-
-    var canvas, progressTimerId, fadeTimerId, currentProgress, showing,
-        addEvent = function(elem, type, handler) {
-            if (elem.addEventListener) elem.addEventListener(type, handler, false)
-            else if (elem.attachEvent) elem.attachEvent('on' + type, handler)
-            else                       elem['on' + type] = handler
-        },
-        options = {
-            autoRun      : true,
-            barThickness : 3,
-            barColors    : {
-                '0'      : 'rgba(26,  188, 156, .9)',
-                '.25'    : 'rgba(52,  152, 219, .9)',
-                '.50'    : 'rgba(241, 196, 15,  .9)',
-                '.75'    : 'rgba(230, 126, 34,  .9)',
-                '1.0'    : 'rgba(211, 84,  0,   .9)'
-            },
-            shadowBlur   : 10,
-            shadowColor  : 'rgba(0,   0,   0,   .6)'
-        },
-        repaint = function() {
-            canvas.width = window.innerWidth
-            canvas.height = options.barThickness * 5 // need space for shadow
-
-            var ctx = canvas.getContext('2d')
-            ctx.shadowBlur = options.shadowBlur
-            ctx.shadowColor = options.shadowColor
-
-            var lineGradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
-            for (var stop in options.barColors)
-                lineGradient.addColorStop(stop, options.barColors[stop])
-            ctx.lineWidth = options.barThickness
-            ctx.beginPath()
-            ctx.moveTo(0, options.barThickness/2)
-            ctx.lineTo(Math.ceil(currentProgress * canvas.width), options.barThickness/2)
-            ctx.strokeStyle = lineGradient
-            ctx.stroke()
-        },
-        createCanvas = function() {
-            canvas = document.createElement('canvas')
-            var style = canvas.style
-            style.position = 'fixed'
-            style.top = style.left = style.right = style.margin = style.padding = 0
-            style.zIndex = 100001
-            style.display = 'none'
-            style.pointerEvents = 'none'
-            document.body.appendChild(canvas)
-            addEvent(window, 'resize', repaint)
-        },
-        rainbow = {
-            config: function(opts) {
-                for (var key in opts)
-                    if (options.hasOwnProperty(key))
-                        options[key] = opts[key]
-            },
-            show: function() {
-                if (showing) return
-                showing = true
-                if (fadeTimerId !== null)
-                    window.cancelAnimationFrame(fadeTimerId) 
-                if (!canvas) createCanvas()
-                canvas.style.opacity = 1
-                canvas.style.display = 'block'
-                rainbow.progress(0)
-                if (options.autoRun) {
-                    (function loop() {
-                        progressTimerId = window.requestAnimationFrame(loop)
-                        rainbow.progress('+' + (.05 * Math.pow(1-Math.sqrt(currentProgress), 2)))
-                    })()
-                }
-            },
-            progress: function(to) {
-                if (typeof to === "undefined")
-                    return currentProgress
-                if (typeof to === "string")
-                    to = (to.indexOf('+') !== -1 || to.indexOf('-') !== -1)
-                        ? currentProgress + eval('0' + to)
-                        : parseFloat(to)
-                currentProgress = to > 1 ? 1 : to
-                repaint()
-                return currentProgress
-            },
-            hide: function() {
-                if (!showing) return
-                showing = false
-                if (progressTimerId != null) {
-                    window.cancelAnimationFrame(progressTimerId)
-                    progressTimerId = null
-                }
-                (function loop() {
-                    if (rainbow.progress('+.1') >= 1) {
-                        canvas.style.opacity -= .05
-                        if (canvas.style.opacity <= 0) {
-                            canvas.style.display = 'none'
-                            fadeTimerId = null
-                            return
-                        } 
-                    }
-                    fadeTimerId = window.requestAnimationFrame(loop)
-                })()
-            }
-        }
-
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        module.exports = rainbow
-    } else if (typeof define === 'function' && define.amd) {
-        define(function() { return rainbow })
-    } else {
-        this.rainbow = rainbow
-    }
-}).call(this, window, document)
-
-},{}],72:[function(require,module,exports){
 var matches = require('matches-selector')
 
 module.exports = function(el, selector) {
@@ -10519,7 +10386,7 @@ module.exports = function(el, selector) {
   return siblings
 }
 
-},{"matches-selector":73}],73:[function(require,module,exports){
+},{"matches-selector":72}],72:[function(require,module,exports){
 'use strict';
 
 var proto = Element.prototype;
@@ -10549,7 +10416,7 @@ function match(el, selector) {
   }
   return false;
 }
-},{}],74:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 var window = require("global/window")
 var once = require("once")
 
@@ -10604,6 +10471,11 @@ function createXHR(options, callback) {
     xhr.onprogress = function () {
         // IE must die
     }
+    
+    if (options.onUploadProgress) {
+      if (xhr.upload) xhr.upload.onprogress = options.onUploadProgress
+    }
+    
     // hate IE
     xhr.ontimeout = noop
     xhr.open(method, uri, !sync)
@@ -10671,7 +10543,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":75,"once":76}],75:[function(require,module,exports){
+},{"global/window":74,"once":75}],74:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window
@@ -10682,7 +10554,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],76:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -10703,7 +10575,7 @@ function once (fn) {
   }
 }
 
-},{}],77:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (process){
 var createEditor = require('./')
 
@@ -10714,7 +10586,7 @@ var opts = {
 createEditor(opts)
 
 }).call(this,require("FWaASH"))
-},{"./":1,"FWaASH":9}],78:[function(require,module,exports){
+},{"./":1,"FWaASH":9}],77:[function(require,module,exports){
 var through = require('through')
 
 module.exports = head
@@ -10752,7 +10624,7 @@ function head (onHead, opts) {
   }
 }
 
-},{"through":79}],79:[function(require,module,exports){
+},{"through":78}],78:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -10864,7 +10736,7 @@ function through (write, end, opts) {
 
 
 }).call(this,require("FWaASH"))
-},{"FWaASH":9,"stream":27}],80:[function(require,module,exports){
+},{"FWaASH":9,"stream":27}],79:[function(require,module,exports){
 var CSV = require('csv-string');
 var EOL = require('os').EOL;
 
@@ -10936,10 +10808,10 @@ function isldJSON(string) {
 
 function noop() {}
 
-},{"csv-string":81,"os":8}],81:[function(require,module,exports){
+},{"csv-string":80,"os":8}],80:[function(require,module,exports){
 module.exports = require('./lib/csv.js');
 
-},{"./lib/csv.js":82}],82:[function(require,module,exports){
+},{"./lib/csv.js":81}],81:[function(require,module,exports){
 'use strict';
 var Parser = require('./parser.js');
 var Streamer = require('./streamer.js');
@@ -11119,7 +10991,7 @@ exports.createStream = function (options) {
 
 
 
-},{"./parser.js":83,"./streamer.js":84}],83:[function(require,module,exports){
+},{"./parser.js":82,"./streamer.js":83}],82:[function(require,module,exports){
 'use strict';
 
 /*
@@ -11307,7 +11179,7 @@ Parser.prototype.Residue = function () {
 module.exports = Parser;
 
 
-},{}],84:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 var Writable = require('stream').Writable;
@@ -11362,6 +11234,6 @@ Streamer.prototype.end = function () {
 
 module.exports = Streamer;
 
-},{"./parser.js":83,"stream":27}]},{},[77])</script>
+},{"./parser.js":82,"stream":27}]},{},[76])</script>
 </body>
 </html>

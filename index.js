@@ -13,7 +13,6 @@ var drop = require('drag-and-drop-files')
 var guessType = require('streamcast')
 var fsReadStream = require('filereader-stream')
 var headStream = require('head-stream')
-var rainbow = require('rainbow-load')
 
 function noop() {}
 
@@ -119,16 +118,20 @@ module.exports = function(opts) {
       
       function upload(file, type) {
         var headers = {"content-type": type}
-        rainbow.show({ autoRun: false })
-        var req = xhr({uri: state.remote + '/api/bulk', method: "POST", timeout: 0, body: file, cors: true, headers: headers}, function(err, resp, body) {
+        var progressBar = dom('<progress max="100" value="0"></progress>')
+        dom('.uploadImportContainer .dialog-body .grid-layout').add(progressBar)
+        
+        var req = xhr({uri: state.remote + '/api/bulk', method: "POST", timeout: 0, body: file, cors: true, headers: headers, onUploadProgress: onProgress}, function(err, resp, body) {
           if (err) notify(err)
           refreshTable()
-          rainbow.hide()
+          dialog.hide()
+          dialogOverlay.hide()
         })
         
-        req.upload.onprogress = function(e) {
+        function onProgress(e) {
           if (e.lengthComputable) {
-            rainbow.progress((e.loaded / e.total) * 100)
+            var progress = ((e.loaded / e.total) * 100)
+            progressBar.attr('value', progress)
           }
         }
       }
@@ -146,10 +149,10 @@ module.exports = function(opts) {
           if (type === 'csv') contentType = 'text/csv'
           upload(first, contentType)
         } else {
+          dialog.hide()
+          dialogOverlay.hide()
           notify('File type not supported')
         }
-        dialog.hide()
-        dialogOverlay.hide()
         read.abort()
         done()
       }

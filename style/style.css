@@ -23,6 +23,7 @@ blockquote,
 .ribbon { position: absolute; top: 0; right: 0; border: 0; }
 .uploadImportContainer #file { margin: 10px 0; }
 .uploadImportContainer .dialog-body { text-align: center; }
+.uploadImportContainer progress { width: 80%; margin: 20px 0; }
 #download {float: right; position: relative; top: 3px; right: 5px;}
 #database{overflow:hidden;}
 #database h2{margin:0;}
