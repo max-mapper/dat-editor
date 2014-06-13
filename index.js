@@ -143,9 +143,9 @@ module.exports = function(opts) {
       
       function onFirstRow(buffer, done) {
         var type = guessType(buffer, {filename: first.name})
-        if (type === 'ndjson' || type === 'csv') {
+        if (type === 'ldjson' || type === 'csv') {
           var contentType
-          if (type === 'ndjson') contentType = 'application/json'
+          if (type === 'ldjson') contentType = 'application/json'
           if (type === 'csv') contentType = 'text/csv'
           upload(first, contentType)
         } else {
