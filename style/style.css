@@ -5,6 +5,8 @@
 .data-table-container { border-top: 1px solid #d4eac8 !important;}
 
 .viewpanel-header, .viewpanel-pagesize { background: #e3f4da !important; }
+.viewpanel-header { padding: 4px 7px 7px 7px; }
+.viewpanel-key { margin: 0; border: none !important; width: 200px; }
 .error { text-align: center; margin: 50px; font-size: 20px; }
 
 section { margin-bottom: 20px; padding: 10px; }

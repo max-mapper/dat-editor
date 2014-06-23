@@ -47,9 +47,7 @@ var templates = {
 module.exports = function(opts) {
   if (!opts) opts = {}
   
-  var state = {
-    offset: 0
-  }
+  var state = {}
   
   state.remote = opts.remote
   
@@ -158,6 +156,12 @@ module.exports = function(opts) {
       }
       
       read.pipe(head)
+    })
+    
+    on(document.body, '#view-panel .viewpanel-key', 'change', function(e) {
+      var input = dom(e.target)
+      var val = input.val()
+      refreshTable({start: val})
     })
     
     on(document.body, '.project-actions .button', 'click', function(e) {
@@ -343,25 +347,26 @@ module.exports = function(opts) {
       cb = opts
       opts = undefined
     }
-  
+    
     if (!opts) {
-      state.offset = 0
       opts = {}
     }
-  
+    
     if (!cb) cb = noop
-  
+    
     var query = {
-      start: opts.start,
-      tail: opts.tail,
       limit: getPageSize()
     }
-  
-    if (typeof query.tail !== 'undefined') state.offset = state.dbInfo.rows - query.limit
-    else if (typeof query.start !== 'undefined') state.offset = state.offset + query.limit
-  
+    
+    if (opts.start) query.start = opts.start
+    if (opts.gt) query.gt = opts.gt
+    if (opts.lt) query.lt = opts.lt
+    if (opts.gte) query.gte = opts.gte
+    if (opts.lte) query.lte = opts.lte
+    if (opts.reverse) query.reverse = opts.reverse
+    
     var uri = state.remote + '/api/json?' + qs.stringify(query)
-  
+    
     xhr({ uri: uri, json: true, cors: true }, function (err, resp, data) {
       if (err) {
         render('networkError', '.data-table-container')
@@ -370,9 +375,11 @@ module.exports = function(opts) {
       if (data.rows.length > 0) {
         var rows = {}
         data.rows.map(function(r) { rows[r.key] = r })
+        // sort by key before rendering (for ?reverse=true queries)
+        data.rows.sort(function(a, b) { return a.key > b.key })
         state.rows = rows
+        renderTable(data.rows)
       }
-      renderTable(data.rows)
       cb(null)
     })
   }
@@ -408,26 +415,26 @@ module.exports = function(opts) {
       notEmpty: true
     })
   
-    dom('.viewpanel-pagingcount').text((state.offset + 1) + " - " + (state.offset + getPageSize()))
-  
     state.newest = rows[0].key
     state.oldest = rows[rows.length - 1].key
-  
-    if (state.offset + getPageSize() >= state.dbInfo.rows) {
-      deactivate(dom( '.viewpanel-paging .last'))
-      deactivate(dom( '.viewpanel-paging .next'))
-    } else {
-      activate(dom( '.viewpanel-paging .last'))
-      activate(dom( '.viewpanel-paging .next'))
-    }
+    
+    dom('.viewpanel-key').val(state.newest)
 
-    if (state.offset === 0) {
-      deactivate(dom( '.viewpanel-paging .previous'))
-      deactivate(dom( '.viewpanel-paging .first'))
-    } else {
-      activate(dom( '.viewpanel-paging .previous'))
-      activate(dom( '.viewpanel-paging .first'))
-    }
+    // if (state.offset + getPageSize() >= state.dbInfo.rows) {
+    //   deactivate(dom( '.viewpanel-paging .last'))
+    //   deactivate(dom( '.viewpanel-paging .next'))
+    // } else {
+    //   activate(dom( '.viewpanel-paging .last'))
+    //   activate(dom( '.viewpanel-paging .next'))
+    // }
+    //
+    // if (state.offset === 0) {
+    //   deactivate(dom( '.viewpanel-paging .previous'))
+    //   deactivate(dom( '.viewpanel-paging .first'))
+    // } else {
+    //   activate(dom( '.viewpanel-paging .previous'))
+    //   activate(dom( '.viewpanel-paging .first'))
+    // }
   }
 
   function activate(e) {
@@ -447,13 +454,13 @@ module.exports = function(opts) {
     dom( '.viewpanel-paging a' ).on('click', function( e ) {
       var action = dom(e.target)
       if (action.hasClass("last")) {
-        refreshTable({tail: getPageSize()})
+        refreshTable({reverse: true})
       }
       if (action.hasClass("next")) {
-        refreshTable({start: state.oldest})
+        refreshTable({gt: state.oldest})
       }
       if (action.hasClass("previous")) {
-        refreshTable()
+        refreshTable({lt: state.newest, reverse: true})
       }
       if (action.hasClass("first")) {
         refreshTable()
