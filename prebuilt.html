@@ -1490,6 +1490,16 @@ a.button:active {
   background: #e3f4da !important;
 }
 
+.viewpanel-header {
+  padding: 4px 7px 7px 7px;
+}
+
+.viewpanel-key {
+  margin: 0;
+  border: none !important;
+  width: 200px;
+}
+
 .error {
   text-align: center;
   margin: 50px;
@@ -2074,7 +2084,7 @@ window.siblings = siblings
 var templates = {
   title: Buffer("PHNwYW4gaWQ9InByb2plY3QtbmFtZS1idXR0b24iIGNsYXNzPSJhcHAtcGF0aC1zZWN0aW9uIj57e2RiX25hbWV9fTwvc3Bhbj4=","base64").toString(),
   generating: Buffer("PGRpdiBjbGFzcz0ibG9hZGluZyI+TG9hZGluZy4uLjwvZGl2Pg==","base64").toString(),
-  tableContainer: Buffer("PGRpdiBpZD0idG9vbC1wYW5lbCI+CiAgPGRpdiBpZD0ic3VtbWFyeS1iYXIiPgogICAgPHNwYW4gaWQ9Im1ldGFkYXRhIj48L3NwYW4+CiAgPC9kaXY+CiAgPGRpdiBpZD0iZG93bmxvYWQiPgogIDwvZGl2Pgo8L2Rpdj4KPGRpdiBpZD0idmlldy1wYW5lbCI+CiAgPGRpdiBjbGFzcz0idmlld3BhbmVsLWhlYWRlciI+CiAgICA8ZGl2IGNsYXNzPSJ2aWV3cGFuZWwtcGFnZXNpemUiPgogICAgICA8c3Bhbj4KICAgICAgICBTaG93OgogICAgICA8L3NwYW4+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBhY3Rpb24iPjU8L2E+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBzZWxlY3RlZCI+MTA8L2E+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBhY3Rpb24iPjI1PC9hPgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0idmlld1BhbmVsLXBhZ2luZ0NvbnRyb2xzLXBhZ2UgYWN0aW9uIj41MDwvYT4KICAgICAgPHNwYW4+CiAgICAgICAgcm93cwogICAgICA8L3NwYW4+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9InZpZXdwYW5lbC1zb3J0aW5nIj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0idmlld3BhbmVsLXBhZ2luZyI+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJmaXJzdCBpbmFjdGlvbiI+wqsgZmlyc3Q8L2E+CiAgICAgIDwhLS0gPGEgaHJlZj0iamF2YXNjcmlwdDp7fSIgY2xhc3M9InByZXZpb3VzIGluYWN0aW9uIj7igLkgcHJldmlvdXM8L2E+IC0tPgogICAgICA8c3BhbiBjbGFzcz0idmlld3BhbmVsLXBhZ2luZ2NvdW50Ij4KICAgICAgICAxIC0gMTAKICAgICAgPC9zcGFuPgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0ibmV4dCBhY3Rpb24iPm5leHQg4oC6PC9hPgogICAgICA8IS0tIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJsYXN0IGFjdGlvbiI+bGFzdCDCuzwvYT4gLS0+CiAgICA8L2Rpdj4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkYXRhLXRhYmxlLWNvbnRhaW5lciI+CiAgPC9kaXY+CjwvZGl2Pg==","base64").toString(),
+  tableContainer: Buffer("PGRpdiBpZD0idG9vbC1wYW5lbCI+CiAgPGRpdiBpZD0ic3VtbWFyeS1iYXIiPgogICAgPHNwYW4gaWQ9Im1ldGFkYXRhIj48L3NwYW4+CiAgPC9kaXY+CiAgPGRpdiBpZD0iZG93bmxvYWQiPgogIDwvZGl2Pgo8L2Rpdj4KPGRpdiBpZD0idmlldy1wYW5lbCI+CiAgPGRpdiBjbGFzcz0idmlld3BhbmVsLWhlYWRlciI+CiAgICA8ZGl2IGNsYXNzPSJ2aWV3cGFuZWwtcGFnZXNpemUiPgogICAgICA8c3Bhbj4KICAgICAgICBTaG93OgogICAgICA8L3NwYW4+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBhY3Rpb24iPjU8L2E+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBzZWxlY3RlZCI+MTA8L2E+CiAgICAgIDxhIGhyZWY9ImphdmFzY3JpcHQ6e30iIGNsYXNzPSJ2aWV3UGFuZWwtcGFnaW5nQ29udHJvbHMtcGFnZSBhY3Rpb24iPjI1PC9hPgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0idmlld1BhbmVsLXBhZ2luZ0NvbnRyb2xzLXBhZ2UgYWN0aW9uIj41MDwvYT4KICAgICAgPHNwYW4+CiAgICAgICAgcm93cwogICAgICA8L3NwYW4+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9InZpZXdwYW5lbC1zb3J0aW5nIj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0idmlld3BhbmVsLXBhZ2luZyI+CiAgICAgIFN0YXJ0aW5nIGZyb20gCiAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBhdXRvY29tcGxldGU9Im9mZiIgYXV0b2NvcnJlY3Q9Im9mZiIgYXV0b2NhcGl0YWxpemU9Im9mZiIgc3BlbGxjaGVjaz0iZmFsc2UiIGNsYXNzPSJ2aWV3cGFuZWwta2V5Ij48L2lucHV0PgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0iZmlyc3QgYWN0aW9uIj7CqyBmaXJzdDwvYT4KICAgICAgPGEgaHJlZj0iamF2YXNjcmlwdDp7fSIgY2xhc3M9InByZXZpb3VzIGFjdGlvbiI+4oC5IHByZXZpb3VzPC9hPgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0ibmV4dCBhY3Rpb24iPm5leHQg4oC6PC9hPgogICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0ibGFzdCBhY3Rpb24iPmxhc3Qgwrs8L2E+CiAgICA8L2Rpdj4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkYXRhLXRhYmxlLWNvbnRhaW5lciI+CiAgPC9kaXY+CjwvZGl2Pg==","base64").toString(),
   dataTable: Buffer("PHRhYmxlIGNsYXNzPSJkYXRhLXRhYmxlIiBjZWxsc3BhY2luZz0iMCI+CiAgPHRib2R5PgogICAgPHRyPgogICAgICA8IS0tIHt7I25vdEVtcHR5fX08dGQgY2xhc3M9ImNvbHVtbi1oZWFkZXIiPjwvdGQ+e3svbm90RW1wdHl9fSAtLT4KICAgICAge3sjaGVhZGVyc319CiAgICAgIDx0ZCBjbGFzcz0iY29sdW1uLWhlYWRlciI+CiAgICAgICAgPGRpdiBjbGFzcz0iY29sdW1uLWhlYWRlci10aXRsZSI+CiAgICAgICAgICA8YSBjbGFzcz0iY29sdW1uLWhlYWRlci1tZW51Ij48L2E+CiAgICAgICAgICA8c3BhbiBjbGFzcz0iY29sdW1uLWhlYWRlci1uYW1lIj57ey59fTwvc3Bhbj4KICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgPC90ZD4KICAgICAge3svaGVhZGVyc319CiAgICA8L3RyPgogICAge3sjcm93c319CiAgICA8dHIgZGF0YS1rZXk9Int7a2V5fX0iPgogICAgICA8IS0tIDx0ZD48YSBjbGFzcz0icm93LWhlYWRlci1tZW51Ij48L2E+PC90ZD4gLS0+CiAgICAgIHt7I2NlbGxzfX0KICAgICAgPHRkIGRhdGEtaGVhZGVyPSJ7e2hlYWRlcn19Ij4KICAgICAgICA8ZGl2IGNsYXNzPSJkYXRhLXRhYmxlLWNlbGwtY29udGVudCI+CiAgICAgICAgICA8YSBocmVmPSJqYXZhc2NyaXB0Ont9IiBjbGFzcz0iZGF0YS10YWJsZS1jZWxsLWVkaXQiIHRpdGxlPSJFZGl0IHRoaXMgY2VsbCI+Jm5ic3A7PC9hPgogICAgICAgICAgPGRpdiBjbGFzcz0iZGF0YS10YWJsZS1jZWxsLXZhbHVlIj57e3ZhbHVlfX08L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgPC90ZD4KICAgICAge3svY2VsbHN9fQogICAgPC90cj4KICAgIHt7L3Jvd3N9fQogIDwvdGJvZHk+CjwvdGFibGU+","base64").toString(),
   metadata: Buffer("e3tyb3dzfX0gcm93cw==","base64").toString(),
   controls: Buffer("PGEgaWQ9ImxvZ2dlZC1pbi1zdGF0dXMiIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiIGNsYXNzPSJzZWNvbmRhcnkiPnt7dGV4dH19PC9hPgo=","base64").toString(),
@@ -2097,9 +2107,7 @@ var templates = {
 module.exports = function(opts) {
   if (!opts) opts = {}
   
-  var state = {
-    offset: 0
-  }
+  var state = {}
   
   state.remote = opts.remote
   
@@ -2208,6 +2216,12 @@ module.exports = function(opts) {
       }
       
       read.pipe(head)
+    })
+    
+    on(document.body, '#view-panel .viewpanel-key', 'change', function(e) {
+      var input = dom(e.target)
+      var val = input.val()
+      refreshTable({start: val})
     })
     
     on(document.body, '.project-actions .button', 'click', function(e) {
@@ -2393,25 +2407,26 @@ module.exports = function(opts) {
       cb = opts
       opts = undefined
     }
-  
+    
     if (!opts) {
-      state.offset = 0
       opts = {}
     }
-  
+    
     if (!cb) cb = noop
-  
+    
     var query = {
-      start: opts.start,
-      tail: opts.tail,
       limit: getPageSize()
     }
-  
-    if (typeof query.tail !== 'undefined') state.offset = state.dbInfo.rows - query.limit
-    else if (typeof query.start !== 'undefined') state.offset = state.offset + query.limit
-  
+    
+    if (opts.start) query.start = opts.start
+    if (opts.gt) query.gt = opts.gt
+    if (opts.lt) query.lt = opts.lt
+    if (opts.gte) query.gte = opts.gte
+    if (opts.lte) query.lte = opts.lte
+    if (opts.reverse) query.reverse = opts.reverse
+    
     var uri = state.remote + '/api/json?' + qs.stringify(query)
-  
+    
     xhr({ uri: uri, json: true, cors: true }, function (err, resp, data) {
       if (err) {
         render('networkError', '.data-table-container')
@@ -2420,9 +2435,11 @@ module.exports = function(opts) {
       if (data.rows.length > 0) {
         var rows = {}
         data.rows.map(function(r) { rows[r.key] = r })
+        // sort by key before rendering (for ?reverse=true queries)
+        data.rows.sort(function(a, b) { return a.key > b.key })
         state.rows = rows
+        renderTable(data.rows)
       }
-      renderTable(data.rows)
       cb(null)
     })
   }
@@ -2458,26 +2475,26 @@ module.exports = function(opts) {
       notEmpty: true
     })
   
-    dom('.viewpanel-pagingcount').text((state.offset + 1) + " - " + (state.offset + getPageSize()))
-  
     state.newest = rows[0].key
     state.oldest = rows[rows.length - 1].key
-  
-    if (state.offset + getPageSize() >= state.dbInfo.rows) {
-      deactivate(dom( '.viewpanel-paging .last'))
-      deactivate(dom( '.viewpanel-paging .next'))
-    } else {
-      activate(dom( '.viewpanel-paging .last'))
-      activate(dom( '.viewpanel-paging .next'))
-    }
+    
+    dom('.viewpanel-key').val(state.newest)
 
-    if (state.offset === 0) {
-      deactivate(dom( '.viewpanel-paging .previous'))
-      deactivate(dom( '.viewpanel-paging .first'))
-    } else {
-      activate(dom( '.viewpanel-paging .previous'))
-      activate(dom( '.viewpanel-paging .first'))
-    }
+    // if (state.offset + getPageSize() >= state.dbInfo.rows) {
+    //   deactivate(dom( '.viewpanel-paging .last'))
+    //   deactivate(dom( '.viewpanel-paging .next'))
+    // } else {
+    //   activate(dom( '.viewpanel-paging .last'))
+    //   activate(dom( '.viewpanel-paging .next'))
+    // }
+    //
+    // if (state.offset === 0) {
+    //   deactivate(dom( '.viewpanel-paging .previous'))
+    //   deactivate(dom( '.viewpanel-paging .first'))
+    // } else {
+    //   activate(dom( '.viewpanel-paging .previous'))
+    //   activate(dom( '.viewpanel-paging .first'))
+    // }
   }
 
   function activate(e) {
@@ -2497,13 +2514,13 @@ module.exports = function(opts) {
     dom( '.viewpanel-paging a' ).on('click', function( e ) {
       var action = dom(e.target)
       if (action.hasClass("last")) {
-        refreshTable({tail: getPageSize()})
+        refreshTable({reverse: true})
       }
       if (action.hasClass("next")) {
-        refreshTable({start: state.oldest})
+        refreshTable({gt: state.oldest})
       }
       if (action.hasClass("previous")) {
-        refreshTable()
+        refreshTable({lt: state.newest, reverse: true})
       }
       if (action.hasClass("first")) {
         refreshTable()
