@@ -1,6 +1,6 @@
 {
   "name": "dat-editor",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "work in progress",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,9 @@
     "head-stream": "0.0.4",
     "mustache": "^0.8.1",
     "offset": "0.0.1",
-    "siblings": "^1.0.1",
+    "siblings": "^1.0.1"
+  },
+  "optionalDependencies": {
     "streamcast": "maxogden/streamcast#destreamify",
     "xhr": "maxogden/xhr#patch-1"
   },
