@@ -3,6 +3,7 @@ var fs = require('fs')
 var url = require('url')
 var mustache = require('mustache').render
 var dom = require('domquery')
+var domify = require('domify')
 var offset = require('offset')
 var qs = require('querystring')
 var on = require('component-delegate').bind
@@ -13,6 +14,8 @@ var drop = require('drag-and-drop-files')
 var guessType = require('streamcast')
 var fsReadStream = require('filereader-stream')
 var headStream = require('head-stream')
+var htmlStringify = require('html-stringify')
+var htmlLinkify = require('html-linkify')
 
 function noop() {}
 
@@ -29,6 +32,7 @@ var templates = {
   metadata: fs.readFileSync('./templates/metadata.html').toString(),
   controls: fs.readFileSync('./templates/controls.html').toString(),
   actions: fs.readFileSync('./templates/actions.html').toString(),
+  inspect: fs.readFileSync('./templates/inspect.html').toString(),
   rowActions: fs.readFileSync('./templates/rowActions.html').toString(),
   columnActions: fs.readFileSync('./templates/columnActions.html').toString(),
   importActions: fs.readFileSync('./templates/importActions.html').toString(),
@@ -278,6 +282,15 @@ module.exports = function(opts) {
       })
       dialog.hide()
       dialogOverlay.hide()
+    })
+    
+    
+    on(document.body, '.row-header-menu', 'click', function(e) {
+      var tr = parents(e.target, 'tr')
+      var key = dom(tr).attr('data-key')
+      var row = state.rows[key]
+      var prettyHtml = htmlStringify(row)
+      showDialog('inspect', {html: htmlLinkify(prettyHtml, {escape: false})})
     })
 
     on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
