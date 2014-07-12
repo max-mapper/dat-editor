@@ -1499,6 +1499,43 @@ a.row-header-menu:hover {
   max-height: 400px;
 }
 
+.topCloseButton {
+  float: right;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.topCloseButton:hover {
+  text-decoration: underline;
+}
+
+.attachments img {
+  width: 80px;
+  margin: 0px 0 10px 0px;
+}
+
+.attachments span {
+  display: block;
+  text-align: center;
+}
+
+.attachments li {
+  display: block;
+  float: left;
+  margin: 0px 35px;
+}
+
+.attachments {
+  padding: 20px;
+  background: #ffe;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.medTitle {
+  font-size: 18px;
+}
+
 .right-panel {
   background: #d4eac8 !important;
 }
@@ -2114,7 +2151,7 @@ var templates = {
   metadata: Buffer("e3tyb3dzfX0gcm93cw==","base64").toString(),
   controls: Buffer("PGEgaWQ9ImxvZ2dlZC1pbi1zdGF0dXMiIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiIGNsYXNzPSJzZWNvbmRhcnkiPnt7dGV4dH19PC9hPgo=","base64").toString(),
   actions: Buffer("PGEgY2xhc3M9ImJ1dHRvbiIgZGF0YS1hY3Rpb249ImltcG9ydCIgaHJlZj0iamF2YXNjcmlwdDp7fSI+PHNwYW4gZGF0YS1hY3Rpb249ImltcG9ydCIgY2xhc3M9ImJ1dHRvbi1tZW51Ij5JbXBvcnQ8L3NwYW4+PC9hPgo8YSBjbGFzcz0iYnV0dG9uIiBkYXRhLWFjdGlvbj0iZXhwb3J0IiBocmVmPSJqYXZhc2NyaXB0Ont9Ij48c3BhbiBkYXRhLWFjdGlvbj0iZXhwb3J0IiBjbGFzcz0iYnV0dG9uLW1lbnUiPkV4cG9ydDwvc3Bhbj48L2E+","base64").toString(),
-  inspect: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgSW5zcGVjdCBSb3cKPC9kaXY+CjxkaXYgY2xhc3M9ImRpYWxvZy1ib2R5Ij4KICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtZnVsbCI+CiAgICB7e3todG1sfX19CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctZm9vdGVyIj4KICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KPC9kaXY+","base64").toString(),
+  inspect: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgSW5zcGVjdCBSb3cKICA8c3BhbiBjbGFzcz0idG9wQ2xvc2VCdXR0b24gY2FuY2VsQnV0dG9uIj54PC9zcGFuPgo8L2Rpdj4KPGRpdiBjbGFzcz0iZGlhbG9nLWJvZHkiPgogIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC1mdWxsIj4KICAgIHt7I2hhc0F0dGFjaG1lbnRzfX0KICAgICAgPGRpdiBjbGFzcz0ibWVkVGl0bGUiPkF0dGFjaG1lbnRzPC9kaXY+CiAgICAgIDx1bCBjbGFzcz0iYXR0YWNobWVudHMiPgogICAgICAgIHt7I2F0dGFjaG1lbnRzfX0KICAgICAgICAgIDxsaT48YSBocmVmPSJ7e3VybH19Ij48aW1nIGNsYXNzPSJhdHRhY2htZW50LWljb24iIHNyYz0iaW1hZ2VzL2ZpbGUtaWNvbi5wbmciPjxzcGFuPnt7bmFtZX19PC9zcGFuPjwvYT48L2xpPgogICAgICAgIHt7L2F0dGFjaG1lbnRzfX0KICAgICAgPC91bD4KICAgIHt7L2hhc0F0dGFjaG1lbnRzfX0KICAgIDxkaXYgY2xhc3M9Im1lZFRpdGxlIj5Sb3cgRGF0YTwvZGl2PgogICAgPGRpdiBjbGFzcz0icHJldHR5UHJpbnRlZCI+CiAgICAgIHt7e2h0bWx9fX0KICAgIDwvZGl2PgogIDwvZGl2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0iZGlhbG9nLWZvb3RlciI+CiAgPGJ1dHRvbiBjbGFzcz0iY2FuY2VsQnV0dG9uIGJ1dHRvbiI+Q2FuY2VsPC9idXR0b24+CjwvZGl2Pg==","base64").toString(),
   rowActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJkZWxldGVSb3ciIGNsYXNzPSJtZW51QWN0aW9uIiBocmVmPSJKYXZhU2NyaXB0OnZvaWQoMCk7Ij5EZWxldGUgdGhpcyByb3c8L2E+PC9saT4K","base64").toString(),
   columnActions: Buffer("PGxpPjxhIGRhdGEtYWN0aW9uPSJidWxrRWRpdCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPlRyYW5zZm9ybS4uLjwvYT48L2xpPgo8bGk+PGEgZGF0YS1hY3Rpb249ImRlbGV0ZUNvbHVtbiIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPkRlbGV0ZSB0aGlzIGNvbHVtbjwvYT48L2xpPgo=","base64").toString(),
   importActions: Buffer("PCEtLSA8bGk+PGEgZGF0YS1hY3Rpb249InVybEltcG9ydCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPkpTT04gQVBJPC9hPjwvbGk+IC0tPgo8bGk+PGEgZGF0YS1hY3Rpb249InBhc3RlSW1wb3J0IiBjbGFzcz0ibWVudUFjdGlvbiIgaHJlZj0iSmF2YVNjcmlwdDp2b2lkKDApOyI+UGFzdGUgSlNPTjwvYT48L2xpPgo8bGk+PGEgZGF0YS1hY3Rpb249InVwbG9hZEltcG9ydCIgY2xhc3M9Im1lbnVBY3Rpb24iIGhyZWY9IkphdmFTY3JpcHQ6dm9pZCgwKTsiPlVwbG9hZCBGaWxlPC9hPjwvbGk+Cg==","base64").toString(),
@@ -2366,15 +2403,27 @@ module.exports = function(opts) {
       dialogOverlay.hide()
     })
     
-    
     on(document.body, '.row-header-menu', 'click', function(e) {
       var tr = parents(e.target, 'tr')
       var key = dom(tr).attr('data-key')
       var row = state.rows[key]
       var prettyHtml = htmlStringify(row)
-      showDialog('inspect', {html: htmlLinkify(prettyHtml, {escape: false})})
+      var attachmentData = []
+      var attachments = row.attachments || {}
+      Object.keys(attachments).map(function(key) {
+        attachmentData.push({
+          name: key,
+          url: state.remote + '/api/' + row.key + '/' + key
+        })
+      })
+      
+      showDialog('inspect', {
+        html: htmlLinkify(prettyHtml, {escape: false}),
+        attachments: attachmentData,
+        hasAttachments: attachmentData.length > 0
+      })
     })
-
+    
     on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
       var editContainer = parents(e.target, '.data-table-cell-editor')
       var editor = dom(editContainer).select('.data-table-cell-editor-editor')
