@@ -1,9 +1,21 @@
 <div class="dialog-header">
   Inspect Row
+  <span class="topCloseButton cancelButton">x</span>
 </div>
 <div class="dialog-body">
   <div class="grid-layout layout-full">
-    {{{html}}}
+    {{#hasAttachments}}
+      <div class="medTitle">Attachments</div>
+      <ul class="attachments">
+        {{#attachments}}
+          <li><a href="{{url}}"><img class="attachment-icon" src="images/file-icon.png"><span>{{name}}</span></a></li>
+        {{/attachments}}
+      </ul>
+    {{/hasAttachments}}
+    <div class="medTitle">Row Data</div>
+    <div class="prettyPrinted">
+      {{{html}}}
+    </div>
   </div>
 </div>
 <div class="dialog-footer">

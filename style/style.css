@@ -3,6 +3,14 @@
 a.row-header-menu { margin-top: 5px; background-image: url('images/view-document.png'); opacity: 0.5; background-repeat: no-repeat; background-size: 20px 20px; width: 20px; height: 20px; }
 a.row-header-menu:hover { opacity: 1; background-position: 0 0; cursor: pointer; cursor: hand; }
 .dialog-body { max-height: 400px; }
+.topCloseButton { float: right; cursor: pointer; cursor: hand; }
+.topCloseButton:hover { text-decoration: underline; }
+
+.attachments img { width: 80px; margin: 0px 0 10px 0px; }
+.attachments span { display: block; text-align: center; }
+.attachments li { display: block; float: left; margin: 0px 35px; }
+.attachments { padding: 20px; background: #ffe; overflow: auto; margin-bottom: 10px; }
+.medTitle { font-size: 18px; }
 
 .right-panel { background: #d4eac8 !important; }
 .data-table-container { border-top: 1px solid #d4eac8 !important;}

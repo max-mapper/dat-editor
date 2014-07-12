@@ -284,15 +284,27 @@ module.exports = function(opts) {
       dialogOverlay.hide()
     })
     
-    
     on(document.body, '.row-header-menu', 'click', function(e) {
       var tr = parents(e.target, 'tr')
       var key = dom(tr).attr('data-key')
       var row = state.rows[key]
       var prettyHtml = htmlStringify(row)
-      showDialog('inspect', {html: htmlLinkify(prettyHtml, {escape: false})})
+      var attachmentData = []
+      var attachments = row.attachments || {}
+      Object.keys(attachments).map(function(key) {
+        attachmentData.push({
+          name: key,
+          url: state.remote + '/api/' + row.key + '/' + key
+        })
+      })
+      
+      showDialog('inspect', {
+        html: htmlLinkify(prettyHtml, {escape: false}),
+        attachments: attachmentData,
+        hasAttachments: attachmentData.length > 0
+      })
     })
-
+    
     on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
       var editContainer = parents(e.target, '.data-table-cell-editor')
       var editor = dom(editContainer).select('.data-table-cell-editor-editor')
