@@ -15,7 +15,6 @@ var guessType = require('streamcast')
 var fsReadStream = require('filereader-stream')
 var headStream = require('head-stream')
 var htmlStringify = require('html-stringify')
-var htmlLinkify = require('html-linkify')
 
 function noop() {}
 
