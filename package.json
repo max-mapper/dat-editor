@@ -1,6 +1,6 @@
 {
   "name": "dat-editor",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "work in progress",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
     "drag-and-drop-files": "0.0.1",
     "filereader-stream": "^0.1.1",
     "head-stream": "0.0.4",
-    "html-linkify": "^1.2.0",
     "html-stringify": "0.0.2",
     "mustache": "^0.8.1",
     "offset": "0.0.1",

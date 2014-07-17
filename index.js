@@ -376,8 +376,9 @@ module.exports = function(opts) {
       })
     })
     
+    debugger
     showDialog('inspect', {
-      html: htmlLinkify(prettyHtml, {escape: false}),
+      html: prettyHtml,
       attachments: attachmentData,
       hasAttachments: attachmentData.length > 0,
       key: row.key
