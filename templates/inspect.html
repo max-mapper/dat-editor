@@ -1,23 +1,30 @@
-<div class="dialog-header">
-  Inspect Row
-  <span class="topCloseButton cancelButton">x</span>
-</div>
-<div class="dialog-body">
-  <div class="grid-layout layout-full">
-    {{#hasAttachments}}
-      <div class="medTitle">Attachments</div>
-      <ul class="attachments">
-        {{#attachments}}
-          <li><a href="{{url}}"><img class="attachment-icon" src="images/file-icon.png"><span>{{name}}</span></a></li>
-        {{/attachments}}
-      </ul>
-    {{/hasAttachments}}
-    <div class="medTitle">Row Data</div>
-    <div class="prettyPrinted">
-      {{{html}}}
+<div class="inspectContainer" data-key="{{key}}">
+  <div class="dialog-header">
+    Inspect Row
+    <span class="topCloseButton cancelButton">x</span>
+  </div>
+  <div class="dialog-body">
+    <div class="grid-layout layout-full">
+        <div class="medTitle">Attachments</div>
+        <ul class="attachments">
+          {{^hasAttachments}}
+          No files attached to this row.
+          {{/hasAttachments}}
+          {{#attachments}}
+            <li><a href="{{url}}"><img class="attachment-icon" title="{{name}}" src="images/file-icon.png"><span>{{name}}</span></a></li>
+          {{/attachments}}
+          <p class="blobUploader">
+            Upload a new file:
+            <input class="uploadBlob" type="file"></input>
+          </p>
+        </ul>
+      <div class="medTitle">Row Data</div>
+      <div class="prettyPrinted">
+        {{{html}}}
+      </div>
     </div>
   </div>
-</div>
-<div class="dialog-footer">
-  <button class="cancelButton button">Cancel</button>
+  <div class="dialog-footer">
+    <button class="cancelButton button">Cancel</button>
+  </div>
 </div>

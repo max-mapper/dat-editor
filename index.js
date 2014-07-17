@@ -162,6 +162,35 @@ module.exports = function(opts) {
       read.pipe(head)
     })
     
+    on(document.body, '.uploadBlob', 'change', function(e) {
+      e.preventDefault()
+      var files = Array.prototype.slice.call(e.target.files)
+      var first = files[0]
+      var container = parents(e.target, '.inspectContainer')
+      var key = dom(container).attr('data-key')
+      var row = state.rows[key]
+      
+      var uploaderEl = dom('.blobUploader')
+      uploaderEl.html('<progress max="100" value="0"></progress>')
+      var progressBar = uploaderEl.select('progress')
+      
+      var uri = state.remote + '/api/' + row.key + '/' + first.name + '?version=' + row.version
+      
+      var req = xhr({uri: uri, method: "POST", timeout: 0, body: first, cors: true, onUploadProgress: onProgress}, function(err, resp, body) {
+        if (err) notify(err)
+        var updated = JSON.parse(body)
+        state.rows[updated.key] = updated
+        showInspector(updated)
+      })
+      
+      function onProgress(e) {
+        if (e.lengthComputable) {
+          var progress = ((e.loaded / e.total) * 100)
+          progressBar.attr('value', progress)
+        }
+      }
+    })
+    
     on(document.body, '#view-panel .viewpanel-key', 'change', function(e) {
       var input = dom(e.target)
       var val = input.val()
@@ -288,21 +317,7 @@ module.exports = function(opts) {
       var tr = parents(e.target, 'tr')
       var key = dom(tr).attr('data-key')
       var row = state.rows[key]
-      var prettyHtml = htmlStringify(row)
-      var attachmentData = []
-      var attachments = row.attachments || {}
-      Object.keys(attachments).map(function(key) {
-        attachmentData.push({
-          name: key,
-          url: state.remote + '/api/' + row.key + '/' + key
-        })
-      })
-      
-      showDialog('inspect', {
-        html: htmlLinkify(prettyHtml, {escape: false}),
-        attachments: attachmentData,
-        hasAttachments: attachmentData.length > 0
-      })
+      showInspector(row)
     })
     
     on(document.body, '.data-table-cell-editor-action .okButton', 'click', function(e) {
@@ -347,6 +362,25 @@ module.exports = function(opts) {
         notify('Updated row ' + data.key + ' to version ' + data.version)
         cb(null, data)
       })
+    })
+  }
+  
+  function showInspector(row) {
+    var prettyHtml = htmlStringify(row)
+    var attachmentData = []
+    var attachments = row.attachments || {}
+    Object.keys(attachments).map(function(key) {
+      attachmentData.push({
+        name: key,
+        url: state.remote + '/api/' + row.key + '/' + key
+      })
+    })
+    
+    showDialog('inspect', {
+      html: htmlLinkify(prettyHtml, {escape: false}),
+      attachments: attachmentData,
+      hasAttachments: attachmentData.length > 0,
+      key: row.key
     })
   }
   
