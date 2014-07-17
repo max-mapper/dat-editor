@@ -73,10 +73,9 @@ module.exports = function(opts) {
 
   refreshTable()
 
-  render('title', '.project-title', {db_name: 'Dat Database'})
   render('tableContainer', '.right-panel')
   // render('generating', '.project-actions')
-  render('actions', '.project-actions', {db_name: 'Dat Database'} )
+  render('actions', '.project-actions')
 
   activateControls()
 
@@ -396,6 +395,7 @@ module.exports = function(opts) {
     xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
+      render('title', '.project-title', {db_name: data.name || 'Dat Database'})
       render('metadata', '#metadata', {rows: addCommas(data.rows || 0)})
       cb(err, data)
     })
