@@ -2151,7 +2151,6 @@ var guessType = require('streamcast')
 var fsReadStream = require('filereader-stream')
 var headStream = require('head-stream')
 var htmlStringify = require('html-stringify')
-var htmlLinkify = require('html-linkify')
 
 function noop() {}
 
@@ -2181,7 +2180,7 @@ var templates = {
   bulkEdit: Buffer("PGRpdiBjbGFzcz0iZGlhbG9nLWhlYWRlciI+CiAgRnVuY3Rpb25hbCB0cmFuc2Zvcm0gb24gY29sdW1uIHt7bmFtZX19CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgPGRpdiBjbGFzcz0iZ3JpZC1sYXlvdXQgbGF5b3V0LXRpZ2h0IGxheW91dC1mdWxsIj4KICAgIDx0YWJsZT4KICAgIDx0Ym9keT4KICAgIDx0cj4KICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgIDxkaXYgY2xhc3M9ImdyaWQtbGF5b3V0IGxheW91dC10aWdodCBsYXlvdXQtZnVsbCI+CiAgICAgICAgICA8dGFibGUgcm93cz0iNCIgY29scz0iNCI+CiAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICA8dHIgc3R5bGU9InZlcnRpY2FsLWFsaWduOiBib3R0b207Ij4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIEV4cHJlc3Npb24KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgIDwvdHI+CiAgICAgICAgICA8dHI+CiAgICAgICAgICAgIDx0ZCBjb2xzcGFuPSIzIj4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJpbnB1dC1jb250YWluZXIiPgogICAgICAgICAgICAgICAgPHRleHRhcmVhIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctY29kZSI+PC90ZXh0YXJlYT4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC90ZD4KICAgICAgICAgICAgPHRkIGNsYXNzPSJleHByZXNzaW9uLXByZXZpZXctcGFyc2luZy1zdGF0dXMiIHdpZHRoPSIxNTAiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjogdG9wOyI+CiAgICAgICAgICAgICAgTm8gc3ludGF4IGVycm9yLgogICAgICAgICAgICA8L3RkPgogICAgICAgICAgPC90cj4KICAgICAgICAgIDx0cj4KICAgICAgICAgICAgPHRkIGNvbHNwYW49IjQiPgogICAgICAgICAgICAgIDxkaXYgaWQ9ImV4cHJlc3Npb24tcHJldmlldy10YWJzIiBjbGFzcz0icmVmaW5lLXRhYnMgdWktdGFicyB1aS13aWRnZXQgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWFsbCI+CiAgICAgICAgICAgICAgICA8c3Bhbj5QcmV2aWV3PC9zcGFuPgogICAgICAgICAgICAgICAgPGRpdiBpZD0iZXhwcmVzc2lvbi1wcmV2aWV3LXRhYnMtcHJldmlldyIgY2xhc3M9InVpLXRhYnMtcGFuZWwgdWktd2lkZ2V0LWNvbnRlbnQgdWktY29ybmVyLWJvdHRvbSI+CiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImV4cHJlc3Npb24tcHJldmlldy1jb250YWluZXIiIHN0eWxlPSJ3aWR0aDogNjUycHg7ICI+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICA8L3RyPgogICAgICAgICAgPC90Ym9keT4KICAgICAgICAgIDwvdGFibGU+CiAgICAgICAgPC9kaXY+CiAgICAgIDwvdGQ+CiAgICA8L3RyPgogICAgPC90Ym9keT4KICAgIDwvdGFibGU+CiAgPC9kaXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJkaWFsb2ctZm9vdGVyIj4KICA8YnV0dG9uIGNsYXNzPSJva0J1dHRvbiBidXR0b24iPiZuYnNwOyZuYnNwO1VwZGF0ZSBBbGwmbmJzcDsmbmJzcDs8L2J1dHRvbj4KICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KPC9kaXY+","base64").toString(),
   cellEditor: Buffer("PGRpdiBjbGFzcz0ibWVudS1jb250YWluZXIgZGF0YS10YWJsZS1jZWxsLWVkaXRvciI+CiAgPHRleHRhcmVhIGNsYXNzPSJkYXRhLXRhYmxlLWNlbGwtZWRpdG9yLWVkaXRvciIgYmluZD0idGV4dGFyZWEiPnt7dmFsdWV9fTwvdGV4dGFyZWE+CiAgPGRpdiBpZD0iZGF0YS10YWJsZS1jZWxsLWVkaXRvci1hY3Rpb25zIj4KICAgIDxkaXYgY2xhc3M9ImRhdGEtdGFibGUtY2VsbC1lZGl0b3ItYWN0aW9uIj4KICAgICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj5VcGRhdGU8L2J1dHRvbj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0iZGF0YS10YWJsZS1jZWxsLWVkaXRvci1hY3Rpb24iPgogICAgICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KICAgIDwvZGl2PgogIDwvZGl2Pgo8L2Rpdj4=","base64").toString(),
   networkError: Buffer("PHAgY2xhc3M9ImVycm9yIj5Pb3BzISBUaGVyZSBpcyBubyBkYXQgcnVubmluZyBhdCB7e3JlbW90ZX19L2FwaTwvcD4=","base64").toString(),
-  signIn: Buffer("PGRpdiBjbGFzcz0ic2lnbkluQ29udGFpbmVyIj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctaGVhZGVyIj4KICAgIFNpZ24gaW4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtdGlnaHQgbGF5b3V0LWZ1bGwiPgogICAgICA8Zm9ybSBuYW1lPSJzaWduLWluLWZvcm0iIGlkPSJzaWduLWluLWZvcm0iPgogICAgICAgIDx0YWJsZSBjbGFzcz0iZm9ybS10YWJsZSI+CiAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICA8dGg+CiAgICAgICAgICAgICAgICA8bGFiZWwgZm9yPSJ1c2VybmFtZSI+VXNlcm5hbWU8L2xhYmVsPgogICAgICAgICAgICAgIDwvdGg+CiAgICAgICAgICAgICAgPHRkPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InRleHQiIHNpemU9IjI1IiBpZD0idXNlcm5hbWUtaW5wdXQiIG5hbWU9InVzZXJuYW1lIj4KICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICA8L3RyPgogICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgPHRoPgogICAgICAgICAgICAgICAgPGxhYmVsIGZvcj0icGFzc3dvcmQiPlBhc3N3b3JkPC9sYWJlbD4KICAgICAgICAgICAgICA8L3RoPgogICAgICAgICAgICAgIDx0ZD4KICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJwYXNzd29yZCIgc2l6ZT0iMjUiIGlkPSJwYXNzd29yZC1pbnB1dCIgbmFtZT0icGFzc3dvcmQiPgogICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJzdWJtaXQiIHN0eWxlPSJoZWlnaHQ6IDBweDsgd2lkdGg6IDBweDsgYm9yZGVyOiBub25lOyBwYWRkaW5nOiAwcHg7IiBoaWRlZm9jdXM9InRydWUiIC8+CiAgICAgICAgICA8L3Rib2R5PgogICAgICAgIDwvdGFibGU+CiAgICAgIDwvZm9ybT4KICAgIDwvZGl2PgogIDwvZGl2PgogIDxkaXYgY2xhc3M9ImRpYWxvZy1mb290ZXIiPgogICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj4mbmJzcDsmbmJzcDtTaWduIGluJm5ic3A7Jm5ic3A7PC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KICA8L2Rpdj4KPC9kaXY+","base64").toString()
+  signIn: Buffer("PGRpdiBjbGFzcz0ic2lnbkluQ29udGFpbmVyIj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctaGVhZGVyIj4KICAgIFNpZ24gaW4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJkaWFsb2ctYm9keSI+CiAgICA8ZGl2IGNsYXNzPSJncmlkLWxheW91dCBsYXlvdXQtdGlnaHQgbGF5b3V0LWZ1bGwiPgogICAgICA8Zm9ybSBuYW1lPSJzaWduLWluLWZvcm0iIGlkPSJzaWduLWluLWZvcm0iPgogICAgICAgIDx0YWJsZSBjbGFzcz0iZm9ybS10YWJsZSI+CiAgICAgICAgICA8dGJvZHk+CiAgICAgICAgICAgIDx0cj4KICAgICAgICAgICAgICA8dGg+CiAgICAgICAgICAgICAgICA8bGFiZWwgZm9yPSJ1c2VybmFtZSI+VXNlcm5hbWU8L2xhYmVsPgogICAgICAgICAgICAgIDwvdGg+CiAgICAgICAgICAgICAgPHRkPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InRleHQiIHNpemU9IjI1IiBpZD0idXNlcm5hbWUtaW5wdXQiIG5hbWU9InVzZXJuYW1lIj4KICAgICAgICAgICAgICA8L3RkPgogICAgICAgICAgICA8L3RyPgogICAgICAgICAgICA8dHI+CiAgICAgICAgICAgICAgPHRoPgogICAgICAgICAgICAgICAgPGxhYmVsIGZvcj0icGFzc3dvcmQiPlBhc3N3b3JkPC9sYWJlbD4KICAgICAgICAgICAgICA8L3RoPgogICAgICAgICAgICAgIDx0ZD4KICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJwYXNzd29yZCIgc2l6ZT0iMjUiIGlkPSJwYXNzd29yZC1pbnB1dCIgbmFtZT0icGFzc3dvcmQiPgogICAgICAgICAgICAgIDwvdGQ+CiAgICAgICAgICAgIDwvdHI+CiAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJzdWJtaXQiIHN0eWxlPSJoZWlnaHQ6IDBweDsgd2lkdGg6IDBweDsgYm9yZGVyOiBub25lOyBwYWRkaW5nOiAwcHg7IGRpc3BsYXk6IG5vbmU7IiBoaWRlZm9jdXM9InRydWUiIC8+CiAgICAgICAgICA8L3Rib2R5PgogICAgICAgIDwvdGFibGU+CiAgICAgIDwvZm9ybT4KICAgIDwvZGl2PgogIDwvZGl2PgogIDxkaXYgY2xhc3M9ImRpYWxvZy1mb290ZXIiPgogICAgPGJ1dHRvbiBjbGFzcz0ib2tCdXR0b24gYnV0dG9uIj4mbmJzcDsmbmJzcDtTaWduIGluJm5ic3A7Jm5ic3A7PC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJjYW5jZWxCdXR0b24gYnV0dG9uIj5DYW5jZWw8L2J1dHRvbj4KICA8L2Rpdj4KPC9kaXY+","base64").toString()
 }
 
 module.exports = function(opts) {
@@ -2210,10 +2209,9 @@ module.exports = function(opts) {
 
   refreshTable()
 
-  render('title', '.project-title', {db_name: 'Dat Database'})
   render('tableContainer', '.right-panel')
   // render('generating', '.project-actions')
-  render('actions', '.project-actions', {db_name: 'Dat Database'} )
+  render('actions', '.project-actions')
 
   activateControls()
 
@@ -2533,6 +2531,7 @@ module.exports = function(opts) {
     xhr({ uri: state.remote + '/api', json: true, cors: true }, function (err, resp, data) {
       if (err) render('networkError', '.data-table-container', state)
       if (data) state.dbInfo = data
+      render('title', '.project-title', {db_name: data.name || 'Dat Database'})
       render('metadata', '#metadata', {rows: addCommas(data.rows || 0)})
       cb(err, data)
     })
@@ -2700,7 +2699,7 @@ module.exports = function(opts) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"add-commas":2,"buffer":3,"closest":28,"component-delegate":30,"domify":34,"domquery":35,"drag-and-drop-files":68,"filereader-stream":69,"head-stream":71,"html-linkify":73,"html-stringify":75,"mustache":77,"offset":78,"querystring":12,"siblings":79,"streamcast":81,"url":27,"xhr":86}],2:[function(require,module,exports){
+},{"add-commas":2,"buffer":3,"closest":28,"component-delegate":30,"domify":34,"domquery":35,"drag-and-drop-files":68,"filereader-stream":69,"head-stream":71,"html-stringify":73,"mustache":75,"offset":76,"querystring":12,"siblings":77,"streamcast":79,"url":27,"xhr":84}],2:[function(require,module,exports){
 module.exports = function (n) {
     var nInt = parseInt(n, 10);
 
@@ -8568,7 +8567,7 @@ function selectEachElement (fn, els) {
   };
 }
 
-},{"./attr":36,"./events":37,"./html":38,"./text":40,"./value":41,"discore-closest":42,"dom-classes":45,"dom-select":49,"dom-style":51,"dom-tree":55,"format-text":60,"new-chain":64,"new-element":65,"siblings":79}],40:[function(require,module,exports){
+},{"./attr":36,"./events":37,"./html":38,"./text":40,"./value":41,"discore-closest":42,"dom-classes":45,"dom-select":49,"dom-style":51,"dom-tree":55,"format-text":60,"new-chain":64,"new-element":65,"siblings":77}],40:[function(require,module,exports){
 var format = require('format-text');
 
 module.exports = text;
@@ -10215,115 +10214,8 @@ function through (write, end, opts) {
 
 }).call(this,require("FWaASH"))
 },{"FWaASH":8,"stream":26}],73:[function(require,module,exports){
-// Takes plain text and replaces links with HTML anchor elements. Based on
-// https://github.com/thejh/node-linkify
-"use strict";
-
-// Link regex
-// See http://daringfireball.net/2010/07/improved_regex_for_matching_urls
-var rLink = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi;
-
-// Email regex
-var rEmail = /\b(([a-zA-Z0-9\-\_\.])+(\+[a-zA-Z0-9]*)?@[a-zA-Z\_\-]+?(\.[a-zA-Z]{2,6})+)/gim;
-
-var escape = require("html-escape");
-
-module.exports = function(text, options) {
-	if ( ! options) options = {};
-
-	var retval = "", cur = 0, match;
-
-	var escapeFn = options.escape === false ? function(str) { return str; } : escape;
-
-	while (match = rLink.exec(text)) {
-		retval += escapeFn(text.slice(cur, match.index));
-		retval += anchor(match[0], options.attributes);
-		cur = rLink.lastIndex;
-	}
-
-	retval += escapeFn(text.slice(cur));
-	retval = emails(retval);
-
-	return retval;
-};
-
-// Return an anchor element for the url
-function anchor(url, attrs) {
-	var text = escape(url),
-		href = url;
-
-	// Ensure protocol at beginning of url
-	if (!/^[a-zA-Z]{1,6}:/.test(href)) {
-		href = 'http://' + href;
-	}
-
-	var attrsString = combine({ href: href }, attrs);
-
-	return "<a " + attrsString + ">" + text + "</a>";
-}
-
-// combine attrs objects into single string
-function combine() {
-	return Array.prototype.slice.call(arguments)
-		.map(attributes)
-		.filter(Boolean)
-		.join(" ");
-}
-
-// Replace emails in text with anchor elements
-function emails(text, attrs) {
-	var attrsString = attributes(attrs);
-
-	return text.replace(rEmail, function(match, email) {
-		var elAttrs = attributes({ href: "mailto:" + email });
-		if (attrsString) {
-			elAttrs += " " + attrsString;
-		}
-
-		return "<a " + elAttrs + ">" + escape(email) + "</a>";
-	});
-}
-
-function attributes(attrs) {
-	if ( ! attrs) return "";
-	return Object.keys(attrs).map(function(name) {
-		var value = attrs[name];
-		return escape(name) + "=\"" + escape(value) + "\"";
-	}).join(" ");
-}
-
-},{"html-escape":74}],74:[function(require,module,exports){
-"use strict";
-
-/* From Twitter's Hogan.js */
-
-var rAmp = /&/g,
-	rLt = /</g,
-	rGt = />/g,
-	rApos =/\'/g,
-	rQuot = /\"/g,
-	hChars =/[&<>\"\']/;
-
-function coerceToString(val) {
-	return String((val === null || val === undefined) ? '' : val);
-}
-
-module.exports = function(str) {
-	str = coerceToString(str);
-
-	return hChars.test(str)
-		? str
-			.replace(rAmp,'&amp;')
-			.replace(rLt,'&lt;')
-			.replace(rGt,'&gt;')
-			.replace(rApos,'&#39;')
-			.replace(rQuot, '&quot;')
-		: str;
-};
-
-},{}],75:[function(require,module,exports){
 exports = module.exports = require('./lib/htmlStringify');
-},{"./lib/htmlStringify":76}],76:[function(require,module,exports){
+},{"./lib/htmlStringify":74}],74:[function(require,module,exports){
 /**
  * Renders an object as formatted HTML
  *
@@ -10407,7 +10299,7 @@ function htmlStringify(obj, fromRecur) {
 }
 
 exports = module.exports = htmlStringify;
-},{}],77:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -10979,7 +10871,7 @@ exports = module.exports = htmlStringify;
 
 }));
 
-},{}],78:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 // http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
 module.exports = function(el) {
   if (el.getBoundingClientRect) {
@@ -10996,7 +10888,7 @@ module.exports = function(el) {
     return { "left": x, "top": y }
   }
 }
-},{}],79:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 var matches = require('matches-selector')
 
 module.exports = function(el, selector) {
@@ -11013,9 +10905,9 @@ module.exports = function(el, selector) {
   return siblings
 }
 
-},{"matches-selector":80}],80:[function(require,module,exports){
+},{"matches-selector":78}],78:[function(require,module,exports){
 module.exports=require(33)
-},{}],81:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 var CSV = require('csv-string');
 
 module.exports = litmus
@@ -11086,10 +10978,10 @@ function isldJSON(string) {
 
 function noop() {}
 
-},{"csv-string":82}],82:[function(require,module,exports){
+},{"csv-string":80}],80:[function(require,module,exports){
 module.exports = require('./lib/csv.js');
 
-},{"./lib/csv.js":83}],83:[function(require,module,exports){
+},{"./lib/csv.js":81}],81:[function(require,module,exports){
 'use strict';
 var Parser = require('./parser.js');
 var Streamer = require('./streamer.js');
@@ -11269,7 +11161,7 @@ exports.createStream = function (options) {
 
 
 
-},{"./parser.js":84,"./streamer.js":85}],84:[function(require,module,exports){
+},{"./parser.js":82,"./streamer.js":83}],82:[function(require,module,exports){
 'use strict';
 
 /*
@@ -11457,7 +11349,7 @@ Parser.prototype.Residue = function () {
 module.exports = Parser;
 
 
-},{}],85:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 var Writable = require('stream').Writable;
@@ -11512,7 +11404,7 @@ Streamer.prototype.end = function () {
 
 module.exports = Streamer;
 
-},{"./parser.js":84,"stream":26}],86:[function(require,module,exports){
+},{"./parser.js":82,"stream":26}],84:[function(require,module,exports){
 var window = require("global/window")
 var once = require("once")
 
@@ -11642,7 +11534,7 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":87,"once":88}],87:[function(require,module,exports){
+},{"global/window":85,"once":86}],85:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window
@@ -11653,7 +11545,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],88:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -11674,7 +11566,7 @@ function once (fn) {
   }
 }
 
-},{}],89:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (process){
 var createEditor = require('./')
 
@@ -11685,6 +11577,6 @@ var opts = {
 createEditor(opts)
 
 }).call(this,require("FWaASH"))
-},{"./":1,"FWaASH":8}]},{},[89])</script>
+},{"./":1,"FWaASH":8}]},{},[87])</script>
 </body>
 </html>
