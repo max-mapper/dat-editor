@@ -7,13 +7,14 @@
     <div class="grid-layout layout-full">
         <div class="medTitle">Attachments</div>
         <ul class="attachments">
-          {{^hasAttachments}}
-          No files attached to this row.
-          {{/hasAttachments}}
           {{#attachments}}
             <li><a href="{{url}}"><img class="attachment-icon" title="{{name}}" src="images/file-icon.png"><span>{{name}}</span></a></li>
           {{/attachments}}
           <p class="blobUploader">
+            {{^hasAttachments}}
+            No files attached to this row.
+            {{/hasAttachments}}
+            
             Upload a new file:
             <input class="uploadBlob" type="file"></input>
           </p>
