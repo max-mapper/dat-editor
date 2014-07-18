@@ -29,7 +29,7 @@ article.example { margin: 20px 0px 20px 0px; padding: 10px 0px 10px 0px; border-
 footer { font-size: 11px; color: #666; text-align: center; margin-top: 20px; }
 footer a { color: #666 }
 .container { margin: 0px auto; }
-.fileIcon { margin: 20px auto; width: 250px; height: 250px; background: url(../images/file-icon.png); }
+.fileIcon { margin: 20px auto; width: 250px; height: 250px; background: url('images/file-icon.png'); }
 #main { background-color: #FFFFFF; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
 code,
 blockquote,
