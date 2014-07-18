@@ -374,7 +374,6 @@ module.exports = function(opts) {
       })
     })
     
-    debugger
     showDialog('inspect', {
       html: prettyHtml,
       attachments: attachmentData,

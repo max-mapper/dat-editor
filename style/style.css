@@ -6,7 +6,7 @@ a.row-header-menu:hover { opacity: 1; background-position: 0 0; cursor: pointer;
 .topCloseButton { float: right; cursor: pointer; cursor: hand; }
 .topCloseButton:hover { text-decoration: underline; }
 
-.attachments img { width: 80px; margin: 0px 0 10px 0px; }
+.attachments .attachment-icon { background: url('images/file-icon.png'); width: 80px; margin: 0px 0 10px 0px; height: 80px; background-size: 80px; background-position: 10px 0; }
 .attachments span { display: block; text-align: center; text-overflow: ellipsis; width: 100px; white-space: nowrap; overflow: hidden; }
 .attachments li { display: block; float: left; margin: 0px 0px 20px 28px; }
 .attachments { padding: 20px 20px 20px 0; background: #ffe; overflow: auto; margin-bottom: 10px; }
