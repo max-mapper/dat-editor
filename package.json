@@ -1,6 +1,6 @@
 {
   "name": "dat-editor",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "work in progress",
   "main": "index.js",
   "scripts": {
