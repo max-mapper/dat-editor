@@ -172,7 +172,7 @@ module.exports = function(opts) {
       uploaderEl.html('<progress max="100" value="0"></progress>')
       var progressBar = uploaderEl.select('progress')
       
-      var uri = state.remote + '/api/' + row.key + '/' + first.name + '?version=' + row.version
+      var uri = state.remote + '/api/rows/' + row.key + '/' + first.name + '?version=' + row.version
       
       var req = xhr({uri: uri, method: "POST", timeout: 0, body: first, cors: true, onUploadProgress: onProgress}, function(err, resp, body) {
         if (err) notify(err)
@@ -353,7 +353,7 @@ module.exports = function(opts) {
   function post(row, cb) {
     if (!cb) cb = noop
     notify('Updating row...')
-    xhr({ uri: state.remote + '/api/' + row.key, method: 'POST', json: row, cors: true }, function (err, resp, data) {
+    xhr({ uri: state.remote + '/api/rows/' + row.key, method: 'POST', json: row, cors: true }, function (err, resp, data) {
       if (err) return cb(err)
       refreshTable(function(err) {
         if (err) return cb(err)
@@ -370,7 +370,7 @@ module.exports = function(opts) {
     Object.keys(attachments).map(function(key) {
       attachmentData.push({
         name: key,
-        url: state.remote + '/api/' + row.key + '/' + key
+        url: state.remote + '/api/rows/' + row.key + '/' + key
       })
     })
     
