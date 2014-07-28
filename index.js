@@ -65,7 +65,7 @@ module.exports = function(opts) {
     bulkEdit: function() { showDialog('bulkEdit', {name: 'COLUMN'}) },
     transform: function() { showDialog('transform') },
     csv: function() { window.location.href = state.remote + '/api/csv' },
-    json: function() { window.location.href = state.remote + "/api/json?limit=-1" },
+    json: function() { window.location.href = state.remote + "/api/rows?limit=-1" },
     urlImport: function() { showDialog('urlImport') },
     pasteImport: function() { showDialog('pasteImport') },
     uploadImport: function() { showDialog('uploadImport') },
@@ -423,7 +423,7 @@ module.exports = function(opts) {
     if (opts.lte) query.lte = opts.lte
     if (opts.reverse) query.reverse = opts.reverse
     
-    var uri = state.remote + '/api/json?' + qs.stringify(query)
+    var uri = state.remote + '/api/rows?' + qs.stringify(query)
     
     xhr({ uri: uri, json: true, cors: true }, function (err, resp, data) {
       if (err) {
