@@ -5,11 +5,11 @@
   </div>
   <div class="dialog-body">
     <div class="grid-layout layout-full">
-        <div class="medTitle">Attachments</div>
+        <div class="medTitle">Blobs</div>
         <ul class="attachments">
-          {{#attachments}}
+          {{#blobs}}
             <li><a href="{{url}}"><span class="attachment-icon" title="{{name}}"></span><span>{{name}}</span></a></li>
-          {{/attachments}}
+          {{/blobs}}
           <p class="blobUploader">
             {{^hasAttachments}}
             No files attached to this row.

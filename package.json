@@ -1,11 +1,10 @@
 {
   "name": "dat-editor",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "work in progress",
   "main": "index.js",
   "scripts": {
-    "start": "beefy app.js",
-    "build": "packify index.html > prebuilt.html"
+    "start": "beefy app.js"
   },
   "author": "max ogden",
   "license": "BSD",

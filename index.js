@@ -366,7 +366,7 @@ module.exports = function(opts) {
   function showInspector(row) {
     var prettyHtml = htmlStringify(row)
     var attachmentData = []
-    var attachments = row.attachments || {}
+    var attachments = row.blobs || {}
     Object.keys(attachments).map(function(key) {
       attachmentData.push({
         name: key,
@@ -376,7 +376,7 @@ module.exports = function(opts) {
     
     showDialog('inspect', {
       html: prettyHtml,
-      attachments: attachmentData,
+      blobs: attachmentData,
       hasAttachments: attachmentData.length > 0,
       key: row.key
     })
