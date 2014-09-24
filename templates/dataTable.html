@@ -18,7 +18,9 @@
       {{#cells}}
       <td data-header="{{header}}">
         <div class="data-table-cell-content">
+          {{^readonly}}
           <a href="javascript:{}" class="data-table-cell-edit" title="Edit this cell">&nbsp;</a>
+          {{/readonly}}
           <div class="data-table-cell-value">{{value}}</div>
         </div>
       </td>

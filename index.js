@@ -462,7 +462,8 @@ module.exports = function(opts) {
           value = row[header]
           if (typeof(value) == "object") value = JSON.stringify(value)
         }
-        cells.push({header: header, value: value})
+        var readonly = (header === 'version')
+        cells.push({header: header, value: value, readonly: readonly})
       })
       tableRows.push({key: row.key, cells: cells})
     })
