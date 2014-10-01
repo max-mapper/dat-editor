@@ -59,7 +59,8 @@ module.exports = function(opts) {
     if (parsed.query) state.remote = parsed.query.remote
   }
   
-  if (!state.remote) state.remote = window.location.origin
+  // Use the current location and remove a (possible) trailing slash.
+  if (!state.remote) state.remote = window.location.origin + window.location.pathname.replace(/\/$/, '');
   
   var actions = {
     bulkEdit: function() { showDialog('bulkEdit', {name: 'COLUMN'}) },
