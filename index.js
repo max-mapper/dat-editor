@@ -458,7 +458,7 @@ module.exports = function(opts) {
       var cells = []
       headers.map(function(header) {
         var value = ""
-        if (row[header]) {
+        if (undefined !== row[header] && null !== row[header]) {
           value = row[header]
           if (typeof(value) == "object") value = JSON.stringify(value)
         }
